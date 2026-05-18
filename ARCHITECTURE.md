@@ -12,6 +12,8 @@
 - `infra/sql/` -> Postgres schema migrations
 - `storage/media/` -> local media file storage
 - `showcase-admin/` -> now has API sync controls in Build & Backup
+- `apps/api/backend.config.json` -> centralized backend config (API, DB metadata, CORS, site targets)
+- `showcase-site/config/backend.json` and `brand-hub/config/backend.json` -> per-site backend integration config
 
 ## Data flow target
 

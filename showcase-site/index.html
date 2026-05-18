@@ -279,6 +279,7 @@
   // ============================================================
   let categories = [];
   let products = [];
+  let backendConfig = null;
 
   // ============================================================
   // (Below this line is the engine — you usually don't need to edit.)
@@ -501,20 +502,56 @@
   // Whichever exists first wins. You only need ONE of these formats.
   async function startup(){
     let loaded = null;
-    try {
-      loaded = await loadFromXlsx('data/showcase-data.xlsx');
-    } catch (e1) {
+    backendConfig = await loadBackendConfig();
+    const mode = String((backendConfig && backendConfig.mode) || '').trim().toLowerCase();
+    const apiBase = String((backendConfig && backendConfig.apiBaseUrl) || '').trim();
+
+    // API mode (if configured) has highest priority.
+    if(mode === 'api' && apiBase){
       try {
-        loaded = await loadFromJson();
-      } catch (e2) {
-        showDataLoadError(e2);
-        return;
+        loaded = await loadFromApi(apiBase);
+      } catch (eApi) {
+        console.warn('API mode failed, falling back to local files:', eApi.message);
+      }
+    }
+
+    if(!loaded){
+      try {
+        loaded = await loadFromXlsx('data/showcase-data.xlsx');
+      } catch (e1) {
+        try {
+          loaded = await loadFromJson();
+        } catch (e2) {
+          showDataLoadError(e2);
+          return;
+        }
       }
     }
     categories = Array.isArray(loaded.categories) ? loaded.categories : [];
     products   = Array.isArray(loaded.products)   ? loaded.products   : [];
     renderCategoriesGrid();
     renderFeatured();
+  }
+
+  async function loadBackendConfig(){
+    try {
+      const r = await fetch('config/backend.json', { cache: 'no-store' });
+      if(!r.ok) throw new Error(`backend config missing (${r.status})`);
+      return await r.json();
+    } catch(err){
+      return null;
+    }
+  }
+
+  async function loadFromApi(baseUrl){
+    const url = `${baseUrl.replace(/\/+$/,'')}/catalog`;
+    const r = await fetch(url, { cache:'no-store' });
+    if(!r.ok) throw new Error(`catalog api failed (${r.status})`);
+    const data = await r.json();
+    return {
+      categories: Array.isArray(data.categories) ? data.categories : [],
+      products: Array.isArray(data.products) ? data.products : []
+    };
   }
 
   async function loadFromXlsx(url){

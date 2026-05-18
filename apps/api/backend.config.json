@@ -1,0 +1,40 @@
+{
+  "environment": "local",
+  "api": {
+    "port": 4100,
+    "mediaBaseUrl": "/media",
+    "mediaStorageDir": "//192.168.2.166/Merchandise Pictures/ShowcaseBundleMedia/media",
+    "cors": {
+      "allowOrigins": [
+        "http://localhost:8000",
+        "http://localhost:8001",
+        "http://localhost:4100",
+        "https://wilsonsykes.github.io"
+      ]
+    }
+  },
+  "database": {
+    "engine": "postgresql",
+    "host": "192.168.2.166",
+    "port": 5432,
+    "database": "showcase_bundle",
+    "sslmode": "prefer"
+  },
+  "sites": {
+    "showcaseSite": {
+      "publicUrl": "https://wilsonsykes.github.io/showcase-bundle/showcase-site/",
+      "apiBaseUrl": "http://localhost:4100",
+      "mode": "snapshot-json"
+    },
+    "brandHub": {
+      "publicUrl": "https://wilsonsykes.github.io/showcase-bundle/brand-hub/",
+      "apiBaseUrl": "http://localhost:4100",
+      "mode": "snapshot-json"
+    },
+    "adminSite": {
+      "publicUrl": "https://wilsonsykes.github.io/showcase-admin-site/admin-dashboard.html",
+      "apiBaseUrl": "http://localhost:4100",
+      "mode": "api-sync"
+    }
+  }
+}

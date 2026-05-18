@@ -1,0 +1,9 @@
+﻿{
+  "site": "brand-hub",
+  "mode": "snapshot-json",
+  "publicUrl": "https://wilsonsykes.github.io/showcase-bundle/brand-hub/",
+  "apiBaseUrl": "http://localhost:4100",
+  "hubEndpoint": "/hub-links",
+  "snapshotFile": "data/links.json",
+  "mediaBaseUrl": "/media"
+}

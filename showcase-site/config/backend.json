@@ -1,0 +1,12 @@
+﻿{
+  "site": "showcase-site",
+  "mode": "snapshot-json",
+  "publicUrl": "https://wilsonsykes.github.io/showcase-bundle/showcase-site/",
+  "apiBaseUrl": "http://localhost:4100",
+  "catalogEndpoint": "/catalog",
+  "snapshotFiles": {
+    "products": "data/products.json",
+    "categories": "data/categories.json"
+  },
+  "mediaBaseUrl": "/media"
+}

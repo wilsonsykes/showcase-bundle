@@ -700,6 +700,7 @@
     //  State — populated from data on load
     // ===========================================================
     let DATA = null;
+    let BACKEND_CONFIG = null;
 
     // ===========================================================
     //  Render: umbrella brand identity (shared by both views)
@@ -960,10 +961,21 @@
     //  Load data — try JSON file first, fall back to embedded
     // ===========================================================
     async function loadData() {
+      BACKEND_CONFIG = await loadBackendConfig();
+      const mode = String((BACKEND_CONFIG && BACKEND_CONFIG.mode) || "").trim().toLowerCase();
+      const apiBase = String((BACKEND_CONFIG && BACKEND_CONFIG.apiBaseUrl) || "").trim();
+
       try {
-        const res = await fetch("data/links.json", { cache: "no-store" });
-        if (!res.ok) throw new Error("Bad response: " + res.status);
-        DATA = await res.json();
+        if(mode === "api" && apiBase){
+          const apiUrl = `${apiBase.replace(/\/+$/,"")}/hub-links`;
+          const apiRes = await fetch(apiUrl, { cache: "no-store" });
+          if (!apiRes.ok) throw new Error("API response: " + apiRes.status);
+          DATA = await apiRes.json();
+        } else {
+          const res = await fetch("data/links.json", { cache: "no-store" });
+          if (!res.ok) throw new Error("Bad response: " + res.status);
+          DATA = await res.json();
+        }
       } catch (err) {
         console.info("Using embedded fallback data:", err.message);
         DATA = FALLBACK_DATA;
@@ -974,6 +986,16 @@
         applyRoute();
       } catch (e) {
         console.error("Render error:", e);
+      }
+    }
+
+    async function loadBackendConfig() {
+      try {
+        const r = await fetch("config/backend.json", { cache: "no-store" });
+        if (!r.ok) throw new Error("Missing backend config: " + r.status);
+        return await r.json();
+      } catch (_err) {
+        return null;
       }
     }
 

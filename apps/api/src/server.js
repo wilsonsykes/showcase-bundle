@@ -8,7 +8,19 @@ const { config } = require('./config');
 const { upsertCatalogSchema, upsertHubSchema } = require('./validators');
 
 const app = express();
-app.use(cors());
+const allowlist = Array.isArray(config.corsOrigins) ? config.corsOrigins.filter(Boolean) : [];
+app.use(
+  cors({
+    origin(origin, cb) {
+      // Allow non-browser / same-origin requests with no Origin header.
+      if (!origin) return cb(null, true);
+      // If no allowlist configured, keep permissive behavior for local development.
+      if (!allowlist.length) return cb(null, true);
+      if (allowlist.includes(origin)) return cb(null, true);
+      return cb(new Error(`CORS blocked for origin: ${origin}`));
+    }
+  })
+);
 app.use(express.json({ limit: '10mb' }));
 
 const mediaDir = path.resolve(config.mediaStorageDir);
@@ -80,7 +92,7 @@ async function getHubPayload() {
 
 app.get('/health', async (_req, res) => {
   const result = await pool.query('SELECT NOW() AS now');
-  res.json({ ok: true, now: result.rows[0].now });
+  res.json({ ok: true, now: result.rows[0].now, env: config.backendEnvironment });
 });
 
 app.get('/', (_req, res) => {
@@ -95,6 +107,33 @@ app.get('/', (_req, res) => {
 
 app.get('/admin', (_req, res) => {
   res.sendFile(path.join(projectRoot, 'showcase-admin', 'admin-dashboard.html'));
+});
+
+app.get('/backend-config/public', (_req, res) => {
+  const showcaseSite = config.sites.showcaseSite || {};
+  const brandHub = config.sites.brandHub || {};
+  const adminSite = config.sites.adminSite || {};
+  res.json({
+    environment: config.backendEnvironment,
+    api: {
+      baseUrl: showcaseSite.apiBaseUrl || brandHub.apiBaseUrl || adminSite.apiBaseUrl || '',
+      mediaBaseUrl: config.mediaBaseUrl
+    },
+    sites: {
+      showcaseSite: {
+        publicUrl: showcaseSite.publicUrl || '',
+        mode: showcaseSite.mode || 'snapshot-json'
+      },
+      brandHub: {
+        publicUrl: brandHub.publicUrl || '',
+        mode: brandHub.mode || 'snapshot-json'
+      },
+      adminSite: {
+        publicUrl: adminSite.publicUrl || '',
+        mode: adminSite.mode || 'api-sync'
+      }
+    }
+  });
 });
 
 app.get('/catalog', async (_req, res) => {
