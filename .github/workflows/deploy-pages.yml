@@ -50,6 +50,7 @@ jobs:
           mkdir -p _site
           cp -R brand-hub _site/brand-hub
           cp -R showcase-site _site/showcase-site
+          cp -R showcase-admin _site/showcase-admin
 
           cat > _site/index.html <<'HTML'
           <!doctype html>
@@ -82,8 +83,12 @@ jobs:
                   <div class="title">Brand Hub</div>
                   <div class="desc">Umbrella brand drill-down and materials links.</div>
                 </a>
+                <a class="card" href="./showcase-admin/admin-dashboard.html">
+                  <div class="title">Admin Dashboard</div>
+                  <div class="desc">Manage products, categories, links, and API sync.</div>
+                </a>
               </div>
-              <div class="note">The admin dashboard is intentionally excluded from public deployment.</div>
+              <div class="note">Admin is deployed in this same Pages site. Protect API writes using a strong admin key.</div>
             </main>
           </body>
           </html>

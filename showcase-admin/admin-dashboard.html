@@ -333,6 +333,34 @@
       </div>
     </div>
 
+    <div class="card" id="card-api-sync">
+      <h2>
+        API sync (Postgres)
+        <span class="pill" id="api-status" style="background:#fff7eb;color:#6e4d18">Not configured</span>
+      </h2>
+      <p class="lede">Use this to sync data directly with the local API and Postgres. Keep folder save/download as fallback. Default API base is <code>http://localhost:4100</code>.</p>
+      <div class="brand-form" style="margin-bottom:12px">
+        <label>
+          <span class="bf-label">API base URL</span>
+          <input type="text" id="api-base-url" placeholder="http://localhost:4100" />
+        </label>
+        <label>
+          <span class="bf-label">Admin API key</span>
+          <input type="password" id="api-admin-key" placeholder="x-admin-key value" />
+        </label>
+      </div>
+      <div class="toolbar">
+        <button id="save-api-settings">Save API settings</button>
+        <button class="ghost" id="test-api-connection">Test API</button>
+        <button class="alt" id="sync-catalog-api">Sync products + categories to API</button>
+        <button class="alt" id="sync-hub-api">Sync hub data to API</button>
+        <button class="ghost" id="pull-catalog-api">Pull catalog from API</button>
+        <button class="ghost" id="pull-hub-api">Pull hub data from API</button>
+        <button class="ghost" id="export-snapshots-api">Export snapshots from API</button>
+      </div>
+      <div class="messages" id="msg-api" style="margin-top:8px"></div>
+    </div>
+
     <div class="card">
       <h2>Download data files</h2>
       <p class="lede">Alternative if you can't (or don't want to) connect folders. Downloads the JSON files. Drop <code>products.json</code> and <code>categories.json</code> into <code>showcase-site/data/</code>, and <code>links.json</code> into <code>brand-hub/data/</code>.</p>
@@ -475,7 +503,13 @@
     logo: '',
     footer: '© 2026 Harmony & Homes'
   };
+  const API_SETTINGS_KEY = 'showcase_admin_api_settings_v1';
+  const DEFAULT_API_SETTINGS = {
+    baseUrl: 'http://localhost:4100',
+    adminKey: ''
+  };
   let state = loadState();
+  let apiSettings = loadApiSettings();
 
   function loadState(){
     // Try v2 (current shape) first
@@ -503,6 +537,23 @@
     return { products:[], categories:[], brands:[], links:[], brand: {...DEFAULT_BRAND} };
   }
 
+  function loadApiSettings(){
+    try {
+      const s = JSON.parse(localStorage.getItem(API_SETTINGS_KEY) || 'null');
+      if(s && typeof s === 'object'){
+        return {
+          baseUrl: String(s.baseUrl || DEFAULT_API_SETTINGS.baseUrl).trim(),
+          adminKey: String(s.adminKey || '')
+        };
+      }
+    } catch(e){}
+    return {...DEFAULT_API_SETTINGS};
+  }
+
+  function persistApiSettings(){
+    localStorage.setItem(API_SETTINGS_KEY, JSON.stringify(apiSettings));
+  }
+
   let saveTimer = null;
   function saveState(){
     setStatus('unsaved', 'Saving...');
@@ -520,6 +571,68 @@
     const el = document.getElementById('saveStatus');
     el.className = 'save-status ' + cls;
     el.textContent = text;
+  }
+
+  function setApiStatus(ok, text){
+    const el = document.getElementById('api-status');
+    if(!el) return;
+    el.textContent = text;
+    if(ok){
+      el.style.background = '#e8f0eb';
+      el.style.color = 'var(--green)';
+    } else {
+      el.style.background = '#fff7eb';
+      el.style.color = '#6e4d18';
+    }
+  }
+
+  function showApiMsg(kind, text){
+    const box = document.getElementById('msg-api');
+    if(!box) return;
+    if(kind === 'clear'){ box.innerHTML = ''; return; }
+    const icon = kind==='error' ? '!' : kind==='warn' ? '?' : 'OK';
+    const cls = kind==='error' ? 'msg-error' : kind==='warn' ? 'msg-warn' : 'msg-ok';
+    const div = document.createElement('div');
+    div.className = 'msg ' + cls;
+    div.innerHTML = `<span class="msg-icon">${icon}</span><div>${escapeAttr(text)}</div>`;
+    box.innerHTML = '';
+    box.appendChild(div);
+  }
+
+  function apiBaseUrl(){
+    return String(apiSettings.baseUrl || '').trim().replace(/\/+$/, '');
+  }
+
+  function apiHeaders(){
+    const headers = { 'Content-Type': 'application/json' };
+    const key = String(apiSettings.adminKey || '').trim();
+    if(key) headers['x-admin-key'] = key;
+    return headers;
+  }
+
+  async function apiFetchJson(path, options){
+    const base = apiBaseUrl();
+    if(!base) throw new Error('API base URL is empty.');
+    const res = await fetch(base + path, options || {});
+    const raw = await res.text();
+    let body = null;
+    try { body = raw ? JSON.parse(raw) : null; } catch(e){}
+    if(!res.ok){
+      const errText = body && body.error ? body.error : `${res.status} ${res.statusText}`;
+      throw new Error(errText);
+    }
+    return body;
+  }
+
+  function applyCatalogPayload(payload){
+    if(payload && Array.isArray(payload.products)) state.products = payload.products;
+    if(payload && Array.isArray(payload.categories)) state.categories = payload.categories;
+  }
+
+  function applyHubPayload(payload){
+    if(payload && payload.brand && typeof payload.brand === 'object') state.brand = payload.brand;
+    if(payload && Array.isArray(payload.brands)) state.brands = payload.brands;
+    if(payload && Array.isArray(payload.links)) state.links = payload.links;
   }
 
   // ============================================================
@@ -582,6 +695,7 @@
     renderTable('brands');
     renderTable('links');
     renderBrandForm();
+    renderApiForm();
   }
 
   function renderBrandForm(){
@@ -596,6 +710,14 @@
     set('brand-footer',  b.footer  || '');
   }
 
+  function renderApiForm(){
+    const baseEl = document.getElementById('api-base-url');
+    const keyEl = document.getElementById('api-admin-key');
+    if(baseEl && baseEl.value !== (apiSettings.baseUrl || '')) baseEl.value = apiSettings.baseUrl || '';
+    if(keyEl && keyEl.value !== (apiSettings.adminKey || '')) keyEl.value = apiSettings.adminKey || '';
+    setApiStatus(Boolean(apiBaseUrl()), apiBaseUrl() ? `Configured: ${apiBaseUrl()}` : 'Not configured');
+  }
+
   // Brand form — auto-save on input
   document.body.addEventListener('input', e => {
     if(!e.target.id || !e.target.id.startsWith('brand-')) return;
@@ -604,6 +726,71 @@
     state.brand[key] = e.target.value;
     saveState();
   });
+
+  // API settings form
+  document.body.addEventListener('input', e => {
+    if(e.target.id === 'api-base-url'){
+      apiSettings.baseUrl = e.target.value.trim();
+      setApiStatus(Boolean(apiBaseUrl()), apiBaseUrl() ? `Configured: ${apiBaseUrl()}` : 'Not configured');
+      return;
+    }
+    if(e.target.id === 'api-admin-key'){
+      apiSettings.adminKey = e.target.value;
+      return;
+    }
+  });
+
+  async function syncCatalogToApi(){
+    showApiMsg('ok', 'Syncing catalog to API...');
+    const payload = {
+      categories: state.categories,
+      products: state.products
+    };
+    const res = await apiFetchJson('/products/upsert', {
+      method: 'POST',
+      headers: apiHeaders(),
+      body: JSON.stringify(payload)
+    });
+    showApiMsg('ok', `Catalog synced. Categories: ${res.upserted?.categories || 0}, products: ${res.upserted?.products || 0}.`);
+  }
+
+  async function syncHubToApi(){
+    showApiMsg('ok', 'Syncing hub data to API...');
+    const payload = buildHubFilePayload(state);
+    const res = await apiFetchJson('/links/upsert', {
+      method: 'POST',
+      headers: apiHeaders(),
+      body: JSON.stringify(payload)
+    });
+    showApiMsg('ok', `Hub synced. Sub-brands: ${res.upserted?.brands || 0}, links: ${res.upserted?.links || 0}.`);
+  }
+
+  async function pullCatalogFromApi(){
+    showApiMsg('ok', 'Loading catalog from API...');
+    const payload = await apiFetchJson('/catalog');
+    applyCatalogPayload(payload);
+    saveState();
+    renderAll();
+    showApiMsg('ok', `Loaded ${state.categories.length} categories and ${state.products.length} products from API.`);
+  }
+
+  async function pullHubFromApi(){
+    showApiMsg('ok', 'Loading hub data from API...');
+    const payload = await apiFetchJson('/hub-links');
+    applyHubPayload(payload);
+    saveState();
+    renderAll();
+    showApiMsg('ok', `Loaded brand identity, ${state.brands.length} sub-brands, and ${state.links.length} links from API.`);
+  }
+
+  async function exportSnapshotsFromApi(){
+    showApiMsg('ok', 'Requesting snapshot export from API...');
+    const res = await apiFetchJson('/admin/export-snapshots', {
+      method: 'POST',
+      headers: apiHeaders()
+    });
+    showApiMsg('ok', `Snapshot export complete: ${res.files?.join(', ') || 'products.json, categories.json, links.json'}`);
+  }
 
   // ============================================================
   // EVENT HANDLERS
@@ -616,6 +803,53 @@
       t.classList.add('active');
       document.getElementById('panel-' + t.dataset.panel).classList.add('active');
     });
+  });
+
+  // API actions (Build & Backup panel)
+  const bindApiButton = (id, fn) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('click', async () => {
+      try {
+        await fn();
+      } catch(err){
+        showApiMsg('error', err.message || String(err));
+      }
+    });
+  };
+
+  bindApiButton('save-api-settings', async () => {
+    persistApiSettings();
+    renderApiForm();
+    showApiMsg('ok', 'API settings saved locally in this browser.');
+  });
+
+  bindApiButton('test-api-connection', async () => {
+    const health = await apiFetchJson('/health');
+    setApiStatus(true, `Connected: ${apiBaseUrl()}`);
+    showApiMsg('ok', `API reachable. Server time: ${health.now}`);
+  });
+
+  bindApiButton('sync-catalog-api', async () => {
+    await syncCatalogToApi();
+  });
+
+  bindApiButton('sync-hub-api', async () => {
+    await syncHubToApi();
+  });
+
+  bindApiButton('pull-catalog-api', async () => {
+    if(!confirm('Replace current dashboard products and categories with API data?')) return;
+    await pullCatalogFromApi();
+  });
+
+  bindApiButton('pull-hub-api', async () => {
+    if(!confirm('Replace current dashboard brand identity, sub-brands, and links with API data?')) return;
+    await pullHubFromApi();
+  });
+
+  bindApiButton('export-snapshots-api', async () => {
+    await exportSnapshotsFromApi();
   });
 
   // Inline cell editing (delegated)
