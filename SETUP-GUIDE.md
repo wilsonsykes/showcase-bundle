@@ -108,7 +108,7 @@ In the **Links** table below, each row is one link. Fields:
 
 ### 6. Deploy
 
-Upload `showcase-site/`, `brand-hub/`, and (optionally) `showcase-admin/` to any static host (Netlify, Vercel, GitHub Pages, Cloudflare Pages). If admin is public, protect API write routes with a strong admin key and avoid sharing that key.
+Upload `showcase-site/` and `brand-hub/` to any static host (Netlify, Vercel, GitHub Pages, Cloudflare Pages). Keep `showcase-admin/` local, or deploy it from a dedicated admin repo/site.
 
 ---
 
@@ -220,8 +220,7 @@ This bundle now includes an Actions workflow at `.github/workflows/deploy-pages.
 ### What gets deployed
 - `showcase-site/` -> published at `/showcase-site/`
 - `brand-hub/` -> published at `/brand-hub/`
-- `showcase-admin/` -> published at `/showcase-admin/admin-dashboard.html`
-- A tiny landing page at `/` linking to all three apps
+- A tiny landing page at `/` linking to both public apps
 
 ### One-time GitHub setup
 1. Push this repository to GitHub.
