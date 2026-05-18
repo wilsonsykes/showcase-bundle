@@ -1,0 +1,250 @@
+{
+  "brand": {
+    "name": "Brand Collective",
+    "tagline": "A family of home and lifestyle brands",
+    "logo": "",
+    "footer": "© 2026 Brand Collective"
+  },
+  "brands": [
+    {
+      "key": "quadro",
+      "name": "Quadro Decor",
+      "tagline": "",
+      "accent": "",
+      "logo": ""
+    },
+    {
+      "key": "harmony",
+      "name": "Harmony & Homes",
+      "tagline": "",
+      "accent": "",
+      "logo": ""
+    },
+    {
+      "key": "metroshirt",
+      "name": "Metro Shirt",
+      "tagline": "",
+      "accent": "",
+      "logo": ""
+    },
+    {
+      "key": "royalhangtock",
+      "name": "Royal Hangtock",
+      "tagline": "",
+      "accent": "",
+      "logo": ""
+    }
+  ],
+  "links": [
+    {
+      "id": "lnk-001",
+      "brand": "quadro",
+      "category": "shop",
+      "label": "Website",
+      "subtitle": "",
+      "url": "https://www.quadrodecor.store/",
+      "icon": "images/quadro-web.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-002",
+      "brand": "quadro",
+      "category": "social",
+      "label": "Facebook",
+      "subtitle": "",
+      "url": "https://www.facebook.com/QuadroDecorPH",
+      "icon": "images/quadro-fb.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-003",
+      "brand": "quadro",
+      "category": "social",
+      "label": "Instagram",
+      "subtitle": "",
+      "url": "https://www.instagram.com/quadrodecorph/",
+      "icon": "images/quadro-ig.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-004",
+      "brand": "harmony",
+      "category": "shop",
+      "label": "Website",
+      "subtitle": "",
+      "url": "https://harmonynhomes.com/",
+      "icon": "images/harmony-web.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-005",
+      "brand": "harmony",
+      "category": "social",
+      "label": "Facebook",
+      "subtitle": "",
+      "url": "https://www.facebook.com/harmonynhomes/",
+      "icon": "images/harmony-fb.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-006",
+      "brand": "harmony",
+      "category": "social",
+      "label": "Instagram",
+      "subtitle": "",
+      "url": "https://www.instagram.com/harmonynhomes/",
+      "icon": "images/harmony-ig.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-007",
+      "brand": "harmony",
+      "category": "social",
+      "label": "TikTok",
+      "subtitle": "",
+      "url": "https://www.tiktok.com/@harmonynhomes",
+      "icon": "images/harmony-tiktok.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-008",
+      "brand": "metroshirt",
+      "category": "shop",
+      "label": "Website",
+      "subtitle": "",
+      "url": "https://www.metroshirtinc.com/",
+      "icon": "images/msi-web.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-009",
+      "brand": "metroshirt",
+      "category": "social",
+      "label": "Facebook",
+      "subtitle": "",
+      "url": "https://www.facebook.com/Metro.Shirt.Inc/",
+      "icon": "images/msi-fb.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-010",
+      "brand": "metroshirt",
+      "category": "social",
+      "label": "Instagram",
+      "subtitle": "",
+      "url": "https://www.instagram.com/metroshirtinc/",
+      "icon": "images/msi-ig.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-011",
+      "brand": "metroshirt",
+      "category": "social",
+      "label": "TikTok",
+      "subtitle": "",
+      "url": "https://www.tiktok.com/@quadroshirt",
+      "icon": "images/msi-tiktok.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-012",
+      "brand": "royalhangtock",
+      "category": "shop",
+      "label": "Website",
+      "subtitle": "",
+      "url": "https://www.royalhangtock.com/",
+      "icon": "images/rhc-web.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-013",
+      "brand": "royalhangtock",
+      "category": "social",
+      "label": "Facebook",
+      "subtitle": "",
+      "url": "https://www.facebook.com/royalhangtock/",
+      "icon": "images/rhc-fb.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-014",
+      "brand": "royalhangtock",
+      "category": "social",
+      "label": "Instagram",
+      "subtitle": "",
+      "url": "https://www.instagram.com/royalhangtock/",
+      "icon": "images/rhc-ig.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-015",
+      "brand": "royalhangtock",
+      "category": "social",
+      "label": "TikTok",
+      "subtitle": "",
+      "url": "https://www.tiktok.com/@royalhangtock",
+      "icon": "images/rhc-tiktok.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-016",
+      "brand": "",
+      "category": "materials",
+      "label": "Company Profile",
+      "subtitle": "",
+      "url": "materials/company-profile.pdf",
+      "icon": "images/companyprofile.png",
+      "highlight": false
+    },
+    {
+      "id": "lnk-017",
+      "brand": "",
+      "category": "materials",
+      "label": "Harmony & Homes: Portfolio",
+      "subtitle": "YouTube • 0:34 • September 2025",
+      "url": "https://youtu.be/F_9KPI5fjD0",
+      "icon": "",
+      "highlight": false
+    },
+    {
+      "id": "lnk-018",
+      "brand": "",
+      "category": "materials",
+      "label": "Metro Shirt: Brand Story",
+      "subtitle": "YouTube • 0:46 • February 2026",
+      "url": "https://youtu.be/vW37-swJ3WI",
+      "icon": "",
+      "highlight": false
+    },
+    {
+      "id": "lnk-019",
+      "brand": "",
+      "category": "materials",
+      "label": "Bella Home Living: Brand Story",
+      "subtitle": "YouTube • 0:38 • February 2026",
+      "url": "https://youtu.be/PIXaATeusj8",
+      "icon": "",
+      "highlight": false
+    },
+    {
+      "id": "lnk-020",
+      "brand": "",
+      "category": "materials",
+      "label": "Quadro Decor: Table Tops",
+      "subtitle": "YouTube • 0:29 • September 2024",
+      "url": "https://youtu.be/izYyLhDAv00",
+      "icon": "",
+      "highlight": false
+    },
+    {
+      "id": "lnk-021",
+      "brand": "",
+      "category": "materials",
+      "label": "Quadro Decor: Wall Decors",
+      "subtitle": "YouTube • 0:29 • September 2024",
+      "url": "https://youtu.be/PLKYKvfTQfM",
+      "icon": "",
+      "highlight": false
+    }
+  ]
+}

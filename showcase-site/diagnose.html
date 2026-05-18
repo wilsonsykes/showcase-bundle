@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Showcase Diagnostic</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --cream:#faf7f2; --ink:#1a1f1c; --ink-soft:#4a514c; --muted:#8b908c;
+    --green-deep:#2d4a3e; --gold:#b8956a; --line:#e8e3d8;
+    --ok-bg:#e8f0eb; --ok-line:#4a8666; --ok-text:#1f4030;
+    --warn-bg:#fff7eb; --warn-line:#b88638; --warn-text:#6e4d18;
+    --fail-bg:#fce8e3; --fail-line:#c4533c; --fail-text:#6b2415;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--cream); color: var(--ink); margin: 0; padding: 24px 16px 60px; line-height: 1.5; }
+  .container { max-width: 760px; margin: 0 auto; }
+  .header { background: var(--green-deep); color: var(--cream); padding: 22px 24px; border-radius: 14px; margin-bottom: 20px; }
+  .header h1 { font-family: 'Georgia', serif; font-weight: 500; margin: 0 0 6px; font-size: 22px; letter-spacing: -.3px; }
+  .header p { margin: 0; opacity: .85; font-size: 13px; }
+  .summary { background: #fff; padding: 14px 18px; border-radius: 10px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.04); font-size: 13px; color: var(--ink-soft); display: none; }
+  .summary.show { display: block; }
+  .summary .counts { display: flex; gap: 14px; margin-top: 6px; font-weight: 500; }
+  .summary .count-ok { color: var(--ok-line); }
+  .summary .count-warn { color: var(--warn-line); }
+  .summary .count-fail { color: var(--fail-line); }
+  .check { padding: 12px 16px; margin: 8px 0; border-radius: 8px; display: flex; align-items: flex-start; gap: 12px; font-size: 14px; }
+  .check.ok { background: var(--ok-bg); border-left: 4px solid var(--ok-line); color: var(--ok-text); }
+  .check.warn { background: var(--warn-bg); border-left: 4px solid var(--warn-line); color: var(--warn-text); }
+  .check.fail { background: var(--fail-bg); border-left: 4px solid var(--fail-line); color: var(--fail-text); }
+  .check-icon { font-weight: bold; font-size: 16px; line-height: 1.3; flex-shrink: 0; width: 18px; text-align: center; }
+  .check-body { flex: 1; min-width: 0; }
+  .check-title { font-weight: 600; margin-bottom: 4px; }
+  .check-detail { font-size: 12.5px; color: var(--ink-soft); }
+  .check.ok .check-detail { color: var(--ok-text); opacity: .8; }
+  .check.warn .check-detail { color: var(--warn-text); opacity: .85; }
+  .check.fail .check-detail { color: var(--fail-text); opacity: .85; }
+  code { background: rgba(0,0,0,.06); padding: 2px 6px; border-radius: 3px; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; word-break: break-all; }
+  .check.ok code { background: rgba(74,134,102,.15); }
+  .check.warn code { background: rgba(184,134,56,.15); }
+  .check.fail code { background: rgba(196,83,60,.15); }
+  .actions { background: #fff; padding: 16px 18px; border-radius: 10px; margin-top: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.04); }
+  .actions h3 { margin: 0 0 8px; font-size: 14px; font-weight: 600; color: var(--ink); }
+  .actions ul { margin: 0; padding-left: 20px; font-size: 13px; color: var(--ink-soft); }
+  .actions ul li { margin-bottom: 4px; }
+  .actions a { color: var(--green-deep); }
+  .toolbar { display: flex; gap: 8px; margin-bottom: 16px; }
+  .toolbar button { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--ink); }
+  .toolbar button:hover { background: var(--line); }
+  .loading { padding: 20px; text-align: center; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Showcase Diagnostic</h1>
+    <p>Checks your data files, images, and materials, and tells you exactly what's missing or wrong.</p>
+  </div>
+
+  <div class="toolbar">
+    <button id="rerun">Re-run checks</button>
+    <button id="check-all-images">Check ALL images (slow)</button>
+    <button id="check-all-materials">Check ALL materials (slow)</button>
+  </div>
+
+  <div class="summary" id="summary">
+    <div><b id="summary-status">Running checks...</b></div>
+    <div class="counts">
+      <span class="count-ok"><span id="count-ok">0</span> passed</span>
+      <span class="count-warn"><span id="count-warn">0</span> warnings</span>
+      <span class="count-fail"><span id="count-fail">0</span> failed</span>
+    </div>
+  </div>
+
+  <div id="checks"></div>
+  <div class="loading" id="loading">Running checks…</div>
+
+  <div class="actions">
+    <h3>If something failed:</h3>
+    <ul>
+      <li>Fix the issue (rename a file, fix a column header, fill in a required field, etc.)</li>
+      <li>Save your changes if you edited the xlsx</li>
+      <li>Click <b>Re-run checks</b> above</li>
+      <li>When everything passes, hard-refresh the showcase: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const checksEl = document.getElementById('checks');
+const loadingEl = document.getElementById('loading');
+const summaryEl = document.getElementById('summary');
+let counts = { ok: 0, warn: 0, fail: 0 };
+let allProductImages = [];
+let allMaterials = [];
+
+function add(status, title, detail) {
+  counts[status]++;
+  const el = document.createElement('div');
+  el.className = 'check ' + status;
+  el.innerHTML = `
+    <div class="check-icon">${status === 'ok' ? '✓' : status === 'warn' ? '!' : '✗'}</div>
+    <div class="check-body">
+      <div class="check-title">${title}</div>
+      ${detail ? '<div class="check-detail">' + detail + '</div>' : ''}
+    </div>`;
+  checksEl.appendChild(el);
+  document.getElementById('count-ok').textContent = counts.ok;
+  document.getElementById('count-warn').textContent = counts.warn;
+  document.getElementById('count-fail').textContent = counts.fail;
+}
+
+function escape(s) { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+async function fileExists(url) {
+  try {
+    const r = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
+async function run() {
+  checksEl.innerHTML = '';
+  loadingEl.style.display = 'block';
+  counts = { ok: 0, warn: 0, fail: 0 };
+  summaryEl.classList.add('show');
+  document.getElementById('summary-status').textContent = 'Running checks...';
+
+  // 1. Server vs file://
+  if (location.protocol === 'file:') {
+    add('fail', 'You are not using the local server',
+      'You opened this file directly by double-clicking it. The showcase needs the local server to load data files. <br><br><b>Fix:</b> Close this tab. Double-click <code>start-server.bat</code> (Windows) or <code>start-server.command</code> (Mac). Then in your browser, go to <code>http://localhost:8000/diagnose.html</code>');
+    loadingEl.style.display = 'none';
+    document.getElementById('summary-status').textContent = 'Critical issue — fix the server problem first.';
+    return;
+  }
+  add('ok', 'Local server is running', 'Page loaded from <code>' + escape(location.origin) + '</code>');
+
+  // 2. Try to load XLSX
+  let workbook = null;
+  let xlsxOk = false;
+  try {
+    const r = await fetch('data/showcase-data.xlsx', { cache: 'no-store' });
+    if (r.ok) {
+      const buf = await r.arrayBuffer();
+      try {
+        workbook = XLSX.read(buf, { type: 'array' });
+        xlsxOk = true;
+        add('ok', 'XLSX file found and parsed', `<code>data/showcase-data.xlsx</code> — ${buf.byteLength.toLocaleString()} bytes`);
+      } catch (e) {
+        add('fail', 'XLSX file is corrupted or unreadable', 'The file exists but couldn\'t be parsed: ' + escape(e.message) + '<br>Try opening it in Excel and saving it again as .xlsx.');
+      }
+    } else if (r.status === 404) {
+      add('warn', 'XLSX file not found',
+        '<code>data/showcase-data.xlsx</code> doesn\'t exist. The system will fall back to JSON files. <br>If you intended to use Excel: make sure the file is at exactly <code>showcase-site/data/showcase-data.xlsx</code> (not renamed, not in a subfolder).');
+    } else {
+      add('fail', 'XLSX file fetch error', 'HTTP ' + r.status);
+    }
+  } catch (e) {
+    add('fail', 'XLSX file fetch error', escape(e.message));
+  }
+
+  // 3. Check sheets and data
+  if (xlsxOk) {
+    const sheets = workbook.SheetNames;
+    add('ok', 'Sheets in the XLSX', 'Found: ' + sheets.map(s => '<code>' + escape(s) + '</code>').join(', '));
+
+    for (const required of ['Products', 'Categories', 'Materials']) {
+      if (!sheets.includes(required)) {
+        add('fail', `Missing sheet: "${required}"`,
+          `The XLSX file needs a sheet named exactly <code>${required}</code> (case-sensitive). <br>You have: ${sheets.map(s => '<code>' + escape(s) + '</code>').join(', ')}. <br>Open the xlsx in Excel, right-click the relevant tab → Rename.`);
+      }
+    }
+
+    // Products checks
+    if (sheets.includes('Products')) {
+      const rows = XLSX.utils.sheet_to_json(workbook.Sheets.Products, { defval: '' });
+      const valid = rows.filter(r => (r.SKU || r.sku) && (r.Name || r.name) && (r.Category || r.cat));
+      if (rows.length === 0) {
+        add('fail', 'Products sheet is empty', 'No rows in the Products sheet. Add some product rows.');
+      } else {
+        add(valid.length === rows.length ? 'ok' : 'warn',
+          `Products: ${valid.length} of ${rows.length} rows are valid`,
+          valid.length < rows.length
+            ? `${rows.length - valid.length} row(s) are missing required fields (SKU, Name, or Category) and will not appear in the showcase.`
+            : 'All rows have SKU, Name, and Category filled in.');
+        const headers = rows[0] ? Object.keys(rows[0]) : [];
+        if (headers.length > 0) {
+          add('ok', 'Products column headers', 'Detected: ' + headers.map(h => '<code>' + escape(h) + '</code>').join(', '));
+        }
+      }
+      allProductImages = rows.filter(r => {
+        const img = r.Image || r.img;
+        return img && !/^https?:\/\//i.test(img);
+      }).map(r => ({ sku: r.SKU || r.sku, img: r.Image || r.img }));
+    }
+
+    // Categories checks
+    if (sheets.includes('Categories')) {
+      const rows = XLSX.utils.sheet_to_json(workbook.Sheets.Categories, { defval: '' });
+      const valid = rows.filter(r => (r.Key || r.key) && (r.Label || r.label));
+      if (rows.length === 0) {
+        add('fail', 'Categories sheet is empty', 'No rows. The home page will show no categories.');
+      } else {
+        add(valid.length === rows.length ? 'ok' : 'warn',
+          `Categories: ${valid.length} of ${rows.length} rows are valid`,
+          valid.length < rows.length
+            ? `${rows.length - valid.length} row(s) missing Key or Label.`
+            : 'All categories have Key and Label.');
+
+        // Cross-check: do all product categories match a category Key?
+        if (sheets.includes('Products')) {
+          const productCats = new Set(XLSX.utils.sheet_to_json(workbook.Sheets.Products, { defval: '' })
+            .map(p => p.Category || p.cat).filter(Boolean));
+          const categoryKeys = new Set(rows.map(c => c.Key || c.key).filter(Boolean));
+          const orphans = [...productCats].filter(c => !categoryKeys.has(c));
+          if (orphans.length > 0) {
+            add('warn', `Products reference categories that don't exist`,
+              `Categories used in Products sheet but not defined in Categories sheet: ${orphans.map(o => '<code>' + escape(o) + '</code>').join(', ')}<br>Either add these as rows in Categories, or fix the typo in Products.`);
+          } else {
+            add('ok', 'All product categories exist in Categories sheet');
+          }
+        }
+      }
+    }
+
+    // Materials checks
+    if (sheets.includes('Materials')) {
+      const rows = XLSX.utils.sheet_to_json(workbook.Sheets.Materials, { defval: '' });
+      const valid = rows.filter(r => (r.Kind || r.kind) && (r.Title || r.title) && (r.URL || r.url));
+      if (rows.length === 0) {
+        add('warn', 'Materials sheet is empty', 'The Materials tab will show "0 items". Add rows if you want a retail-only library.');
+      } else {
+        add(valid.length === rows.length ? 'ok' : 'warn',
+          `Materials: ${valid.length} of ${rows.length} rows are valid`,
+          valid.length < rows.length
+            ? `${rows.length - valid.length} row(s) missing Kind, Title, or URL.`
+            : 'All materials have Kind, Title, and URL.');
+      }
+      allMaterials = rows.filter(r => {
+        const url = r.URL || r.url;
+        return url && !/^https?:\/\//i.test(url);
+      }).map(r => ({ title: r.Title || r.title, url: r.URL || r.url }));
+    }
+  } else {
+    // 4. JSON fallback if XLSX missing
+    for (const f of ['products.json', 'categories.json', 'materials.json']) {
+      try {
+        const r = await fetch('data/' + f, { cache: 'no-store' });
+        if (r.ok) {
+          const data = await r.json();
+          const n = Array.isArray(data) ? data.length : 0;
+          add('ok', `JSON fallback found: ${f}`, `Contains ${n} entries`);
+        } else {
+          add('fail', `JSON fallback missing: ${f}`,
+            `Returned HTTP ${r.status}. The system needs either <code>data/showcase-data.xlsx</code> OR all three JSON files (<code>products.json</code>, <code>categories.json</code>, <code>materials.json</code>) in the <code>data/</code> folder.`);
+        }
+      } catch (e) {
+        add('fail', `JSON fallback error: ${f}`, escape(e.message));
+      }
+    }
+  }
+
+  // 5. Sample image checks (first 5 by default)
+  if (allProductImages.length === 0) {
+    add('ok', 'Product images', 'No local image filenames detected (either you\'re using full URLs, or no Image values are filled in).');
+  } else {
+    const toCheck = allProductImages.slice(0, 5);
+    let okCount = 0, failCount = 0;
+    for (const p of toCheck) {
+      const path = 'images/products/' + p.img;
+      const exists = await fileExists(path);
+      if (exists) {
+        okCount++;
+      } else {
+        failCount++;
+        add('fail', `Product image missing: ${escape(p.sku)}`,
+          `Looking for <code>${escape(path)}</code> — not found.<br>Check: 1) the file exists at that exact path 2) the filename in the Image column matches the file (case-sensitive: <code>Photo.jpg</code> ≠ <code>photo.jpg</code>) 3) no extra spaces in the cell.`);
+      }
+    }
+    if (failCount === 0) {
+      add('ok', `Product images sampled (${okCount} of ${allProductImages.length} local images)`,
+        allProductImages.length > 5 ? 'Click "Check ALL images" above to test the rest.' : 'All accessible.');
+    }
+  }
+
+  // 6. Sample material checks (first 5 by default)
+  if (allMaterials.length === 0) {
+    add('ok', 'Material files', 'No local material files detected (or none set in URL column).');
+  } else {
+    const toCheck = allMaterials.slice(0, 5);
+    let okCount = 0, failCount = 0;
+    for (const m of toCheck) {
+      const exists = await fileExists(m.url);
+      if (exists) {
+        okCount++;
+      } else {
+        failCount++;
+        add('fail', `Material file missing: ${escape(m.title)}`,
+          `Looking for <code>${escape(m.url)}</code> — not found.<br>The URL column must include the folder name (e.g. <code>materials/file.pdf</code>, not just <code>file.pdf</code>).`);
+      }
+    }
+    if (failCount === 0) {
+      add('ok', `Material files sampled (${okCount} of ${allMaterials.length} local files)`,
+        allMaterials.length > 5 ? 'Click "Check ALL materials" above to test the rest.' : 'All accessible.');
+    }
+  }
+
+  loadingEl.style.display = 'none';
+  if (counts.fail === 0 && counts.warn === 0) {
+    document.getElementById('summary-status').textContent = 'Everything looks good! If the showcase still doesn\'t show your data, hard-refresh it: Ctrl+Shift+R or Cmd+Shift+R.';
+  } else if (counts.fail === 0) {
+    document.getElementById('summary-status').textContent = 'Mostly good. Review the warnings above — they won\'t break the showcase but may explain missing data.';
+  } else {
+    document.getElementById('summary-status').textContent = 'Found ' + counts.fail + ' issue(s). Review the red items above for specific fixes.';
+  }
+}
+
+async function checkAll(items, urlBuilder, label) {
+  loadingEl.style.display = 'block';
+  loadingEl.textContent = 'Checking ' + items.length + ' ' + label + '...';
+  let missing = [];
+  for (const item of items) {
+    const url = urlBuilder(item);
+    const exists = await fileExists(url);
+    if (!exists) missing.push({ item, url });
+  }
+  loadingEl.style.display = 'none';
+  if (missing.length === 0) {
+    add('ok', `All ${items.length} ${label} accessible`, 'Every file referenced in the spreadsheet exists.');
+  } else {
+    add('fail', `${missing.length} of ${items.length} ${label} missing`,
+      'Missing files:<br>' + missing.slice(0, 20).map(m => '<code>' + escape(m.url) + '</code>').join('<br>') + (missing.length > 20 ? '<br>...and ' + (missing.length - 20) + ' more.' : ''));
+  }
+}
+
+document.getElementById('rerun').addEventListener('click', run);
+document.getElementById('check-all-images').addEventListener('click', () => {
+  if (allProductImages.length === 0) { alert('No local product images to check.'); return; }
+  checkAll(allProductImages, p => 'images/products/' + p.img, 'product images');
+});
+document.getElementById('check-all-materials').addEventListener('click', () => {
+  if (allMaterials.length === 0) { alert('No local material files to check.'); return; }
+  checkAll(allMaterials, m => m.url, 'material files');
+});
+
+run().catch(e => {
+  add('fail', 'Diagnostic crashed', escape(e.message));
+  loadingEl.style.display = 'none';
+});
+</script>
+
+</body>
+</html>

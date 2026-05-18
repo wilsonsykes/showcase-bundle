@@ -1,0 +1,47 @@
+[
+  {
+    "key": "3d",
+    "label": "Three Dimensional",
+    "img": "3d-frames.png"
+  },
+  {
+    "key": "mirror",
+    "label": "Mirror",
+    "img": "mirror.png"
+  },
+  {
+    "key": "wallart",
+    "label": "Wall Art",
+    "img": "wallart.png"
+  },
+  {
+    "key": "tabledecor",
+    "label": "Table Décor",
+    "img": "tabledecor.jpg"
+  },
+  {
+    "key": "clock",
+    "label": "Clock",
+    "img": "clock.jpg"
+  },
+  {
+    "key": "xds",
+    "label": "Seasonal Decoration",
+    "img": "xds.jpg"
+  },
+  {
+    "key": "apparel",
+    "label": "Apparel",
+    "img": "apparel.png"
+  },
+  {
+    "key": "fragrance",
+    "label": "Fragrance Solutions",
+    "img": "fragrance.png"
+  },
+  {
+    "key": "scentmachine",
+    "label": "Scenting Machine",
+    "img": "scentmachine.png"
+  }
+]

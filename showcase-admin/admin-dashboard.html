@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard · Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#2d4a3e; --green-deep:#1f342a; --cream:#faf7f2; --cream-warm:#f3ede2;
+    --gold:#b8956a; --ink:#1a1f1c; --ink-soft:#4a514c; --muted:#8b908c;
+    --line:#e8e3d8; --rose:#b14b3e; --amber:#c98c3c;
+    --serif:'Fraunces',Georgia,serif; --sans:'Manrope',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:var(--cream-warm);color:var(--ink);min-height:100vh;line-height:1.5}
+  .topbar{
+    background:var(--green-deep);color:var(--cream);padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:50;
+  }
+  .topbar-left{display:flex;align-items:center;gap:12px}
+  .topbar-mark{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(184,149,106,.18)}
+  .topbar-title{font-family:var(--serif);font-size:16px;font-weight:500;letter-spacing:.5px}
+  .topbar-sub{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold-soft);opacity:.75}
+  .save-status{font-size:11px;letter-spacing:.4px;color:rgba(250,247,242,.6);font-weight:500}
+  .save-status.saved{color:#a8d4b8}
+  .save-status.unsaved{color:var(--amber)}
+
+  .tabs{
+    background:#fff;border-bottom:1px solid var(--line);
+    padding:0 24px;display:flex;gap:4px;overflow-x:auto;
+    position:sticky;top:50px;z-index:40;
+  }
+  .tab{
+    padding:14px 18px;background:none;border:none;cursor:pointer;
+    font-family:var(--sans);font-size:13px;font-weight:600;color:var(--muted);
+    border-bottom:2px solid transparent;transition:all .2s ease;
+    white-space:nowrap;letter-spacing:.2px;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--green);border-bottom-color:var(--green)}
+  .tab .count{
+    display:inline-block;background:var(--cream);color:var(--ink-soft);
+    font-size:10px;padding:1px 7px;border-radius:8px;margin-left:6px;font-weight:700;
+  }
+  .tab.active .count{background:#e8f0eb;color:var(--green)}
+
+  .main{padding:24px;max-width:1400px;margin:0 auto}
+
+  .panel{display:none}
+  .panel.active{display:block}
+
+  .toolbar{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;
+  }
+  button{
+    background:var(--green);color:var(--cream);border:none;padding:9px 16px;
+    border-radius:7px;font-family:var(--sans);font-size:13px;font-weight:600;
+    cursor:pointer;transition:background .2s ease;
+  }
+  button:hover{background:var(--green-deep)}
+  button.alt{background:var(--gold);color:var(--green-deep)}
+  button.alt:hover{background:#a07f56}
+  button.ghost{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+  button.ghost:hover{background:var(--cream)}
+  button.danger{background:transparent;color:var(--rose);border:1px solid var(--rose)}
+  button.danger:hover{background:var(--rose);color:#fff}
+  button.tiny{padding:5px 10px;font-size:11px}
+  button:disabled{opacity:.5;cursor:not-allowed}
+
+  .pill{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.5px;margin-left:auto}
+
+  .table-wrap{
+    background:#fff;border-radius:10px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+    overflow-x:auto;margin-bottom:14px;
+  }
+  table.editor{width:100%;border-collapse:collapse;min-width:900px}
+  table.editor thead th{
+    background:var(--green);color:var(--cream);
+    text-align:left;padding:10px 12px;font-size:10px;
+    text-transform:uppercase;letter-spacing:1px;font-weight:700;
+    position:sticky;top:0;z-index:2;white-space:nowrap;
+  }
+  table.editor thead th.req::after{content:" *";color:var(--gold-soft)}
+  table.editor thead th.actions{width:90px;text-align:center}
+  table.editor tbody tr{border-bottom:1px solid var(--line);transition:background .15s ease}
+  table.editor tbody tr:hover{background:var(--cream)}
+  table.editor tbody tr.dragging{opacity:.4}
+  table.editor td{padding:0;vertical-align:middle}
+  table.editor td input{
+    width:100%;padding:8px 10px;border:none;background:transparent;
+    font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;
+    border:1px solid transparent;border-radius:4px;
+  }
+  table.editor td input:focus{
+    background:#fff;border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(45,74,62,.1);
+  }
+  table.editor td input.invalid{border-color:var(--rose);background:#fbe8e6}
+  table.editor td.actions{text-align:center;padding:0 6px;white-space:nowrap}
+  table.editor td.actions button{
+    background:none;color:var(--muted);padding:4px 6px;border-radius:4px;
+    font-size:14px;line-height:1;font-weight:400;
+  }
+  table.editor td.actions button:hover{background:var(--cream-warm);color:var(--ink)}
+  table.editor td.actions button.del:hover{background:#fbe8e6;color:var(--rose)}
+  table.editor td.row-num{
+    text-align:center;color:var(--muted);font-size:11px;
+    padding:0 8px;font-variant-numeric:tabular-nums;font-weight:600;
+    background:var(--cream);border-right:1px solid var(--line);
+  }
+  table.editor tbody tr td.row-num{cursor:grab}
+  table.editor tbody tr td.row-num:active{cursor:grabbing}
+  .empty-state{
+    padding:50px 20px;text-align:center;color:var(--muted);
+    background:#fff;border-radius:10px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  .empty-state h3{font-family:var(--serif);font-size:18px;font-weight:500;color:var(--ink);margin-bottom:6px}
+  .empty-state p{font-size:13px;margin-bottom:14px}
+
+  .messages{margin-bottom:14px}
+  .msg{
+    padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:8px;
+    display:flex;align-items:flex-start;gap:10px;
+  }
+  .msg-icon{flex-shrink:0;font-weight:700;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px}
+  .msg-error{background:#fbe8e6;color:#7a2d22}
+  .msg-error .msg-icon{background:var(--rose);color:#fff}
+  .msg-warn{background:#fff7eb;color:#6e4d18}
+  .msg-warn .msg-icon{background:var(--amber);color:#fff}
+  .msg-ok{background:#e8f0eb;color:var(--green-deep)}
+  .msg-ok .msg-icon{background:var(--green);color:var(--cream)}
+
+  .card{
+    background:#fff;border-radius:10px;padding:22px;margin-bottom:18px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+  }
+  .card h2{font-family:var(--serif);font-weight:500;font-size:18px;margin-bottom:6px}
+  .card .lede{font-size:13px;color:var(--ink-soft);margin-bottom:14px;line-height:1.5}
+  .card .lede code{background:var(--cream);padding:1px 5px;border-radius:3px;font-family:ui-monospace,monospace;font-size:12px;color:var(--ink)}
+
+  .drop{
+    border:2px dashed var(--line);border-radius:10px;
+    padding:24px 18px;text-align:center;cursor:pointer;
+    transition:all .2s ease;background:var(--cream);
+  }
+  .drop:hover, .drop.drag{border-color:var(--green);background:#f4ede0}
+  .drop-title{font-family:var(--serif);font-size:15px;color:var(--ink);margin-bottom:4px}
+  .drop-sub{font-size:12px;color:var(--muted)}
+  .file-input{display:none}
+
+  .warn-box{
+    background:#fff7eb;border-left:3px solid var(--gold);padding:11px 14px;
+    border-radius:6px;font-size:13px;color:var(--ink-soft);margin-bottom:14px;line-height:1.5;
+  }
+  .warn-box b{color:var(--ink)}
+  .warn-box code{background:rgba(184,149,106,.15);padding:1px 5px;border-radius:3px;font-family:ui-monospace,monospace;font-size:12px}
+
+  .meta-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+  .meta-row .left{font-size:12px;color:var(--muted)}
+
+  /* Brand identity form (Hub Links panel) */
+  .brand-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .brand-form label{display:flex;flex-direction:column;gap:5px}
+  .brand-form .bf-label{font-size:11px;font-weight:600;color:var(--ink-soft);letter-spacing:.4px;text-transform:uppercase}
+  .brand-form input{
+    padding:9px 12px;border:1px solid var(--line);border-radius:7px;
+    font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
+    outline:none;transition:border-color .2s ease;
+  }
+  .brand-form input:focus{border-color:var(--green)}
+
+  .footer-note{
+    font-size:11px;color:var(--muted);text-align:center;
+    padding:24px 16px;line-height:1.6;
+  }
+  .footer-note b{color:var(--rose)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-mark"></div>
+    <div>
+      <div class="topbar-title">Admin Dashboard</div>
+      <div class="topbar-sub">Showcase + Brand Hub</div>
+    </div>
+  </div>
+  <div class="save-status saved" id="saveStatus">Loaded</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-panel="products">Products <span class="count" id="cnt-products">0</span></button>
+  <button class="tab" data-panel="categories">Categories <span class="count" id="cnt-categories">0</span></button>
+  <button class="tab" data-panel="links">Hub Links <span class="count" id="cnt-links">0</span></button>
+  <button class="tab" data-panel="build">Build &amp; Backup</button>
+</div>
+
+<div class="main">
+
+  <!-- PRODUCTS PANEL -->
+  <div class="panel active" id="panel-products">
+    <div class="toolbar">
+      <button id="add-products">+ Add product</button>
+      <button class="ghost" id="import-products">Import CSV</button>
+      <button class="ghost" id="export-products">Export CSV</button>
+      <button class="ghost" id="template-products" title="Download a sample CSV with headers and example rows you can fill in">CSV template</button>
+      <button class="danger" id="clear-products">Clear all</button>
+      <div class="pill" id="meta-products">0 products</div>
+    </div>
+    <div class="messages" id="msg-products"></div>
+    <div id="table-products"></div>
+  </div>
+
+  <!-- CATEGORIES PANEL -->
+  <div class="panel" id="panel-categories">
+    <div class="toolbar">
+      <button id="add-categories">+ Add category</button>
+      <button class="ghost" id="import-categories">Import CSV</button>
+      <button class="ghost" id="export-categories">Export CSV</button>
+      <button class="ghost" id="template-categories" title="Download a sample CSV with headers and example rows you can fill in">CSV template</button>
+      <button class="danger" id="clear-categories">Clear all</button>
+      <div class="pill" id="meta-categories">0 categories</div>
+    </div>
+    <div class="messages" id="msg-categories"></div>
+    <div id="table-categories"></div>
+  </div>
+
+  <!-- HUB LINKS PANEL -->
+  <div class="panel" id="panel-links">
+
+    <div class="warn-box" style="margin-bottom:16px">
+      <b>Heads up — edits here aren't live yet.</b> Everything you type auto-saves to your browser (look for "Saved to browser" in the top right), but the actual Brand Hub site reads from a JSON file. To push your edits to the live hub: go to <b>Build &amp; Backup</b> → <b>Save to hub folder</b> (or <b>Download all data files</b> and drop them in).
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <h2>Brand Hub identity</h2>
+      <p class="lede">Top-of-page details for your Brand Hub (the Linktree-style site). The name is shown as the big header, the tagline as the small line below, and the logo is an optional square image. Placeholder until you finalize the hub name.</p>
+      <div class="brand-form">
+        <label>
+          <span class="bf-label">Brand name</span>
+          <input type="text" id="brand-name" placeholder="Harmony &amp; Homes" />
+        </label>
+        <label>
+          <span class="bf-label">Tagline</span>
+          <input type="text" id="brand-tagline" placeholder="A family of home and lifestyle brands" />
+        </label>
+        <label>
+          <span class="bf-label">Logo path</span>
+          <input type="text" id="brand-logo" placeholder="images/logo.jpg  (leave blank to use first letter)" />
+        </label>
+        <label>
+          <span class="bf-label">Footer text</span>
+          <input type="text" id="brand-footer" placeholder="© 2026 Harmony &amp; Homes" />
+        </label>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <h2>Sub-brands</h2>
+      <p class="lede">One row per sub-brand under the umbrella. Each brand gets its own page on the hub, reached by tapping its button on the home screen. The <b>Key</b> is the internal id (no spaces, lowercase, e.g. <code>quadro-decor</code>) — it's how links below reference their brand. <b>Accent</b> is the color used on that brand's button and page. Drag rows to reorder how brands appear on the home page.</p>
+      <div class="toolbar">
+        <button id="add-brands">+ Add sub-brand</button>
+        <button class="ghost" id="import-brands">Import CSV</button>
+        <button class="ghost" id="export-brands">Export CSV</button>
+        <button class="ghost" id="template-brands" title="Download a sample CSV you can fill in via Excel or Google Sheets">CSV template</button>
+        <button class="danger" id="clear-brands">Clear all</button>
+        <div class="pill" id="meta-brands">0 sub-brands</div>
+      </div>
+      <div class="messages" id="msg-brands"></div>
+      <div id="table-brands"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <h2>Links</h2>
+      <p class="lede">Each link is assigned to a sub-brand. The <b>Category</b> field controls <i>where</i> the link appears:</p>
+      <ul style="font-size:13px;color:var(--ink-soft);margin:0 0 14px 22px;line-height:1.6">
+        <li>Category = <code>materials</code> → appears in the <b>Materials</b> section on the home page (the brand name auto-prefixes the subtitle so visitors know whose it is)</li>
+        <li>Any other category (or blank) → appears inside that brand's drill-down page</li>
+        <li><b>Umbrella-wide materials</b>: leave the Brand column blank when the file covers the whole company (e.g. a corporate brochure). The subtitle will auto-prefix with your umbrella brand name instead of a sub-brand. Only allowed when <code>category = materials</code>.</li>
+      </ul>
+      <p class="lede" style="margin-bottom:14px">Drag rows to set order. <code>category</code> is also future-proofed for filter pills inside brand pages later when one brand grows past ~8 links.</p>
+      <div class="toolbar">
+        <button id="add-links">+ Add link</button>
+        <button class="ghost" id="import-links">Import CSV</button>
+        <button class="ghost" id="export-links">Export CSV</button>
+        <button class="ghost" id="template-links" title="Download a sample CSV you can fill in via Excel or Google Sheets">CSV template</button>
+        <button class="danger" id="clear-links">Clear all</button>
+        <div class="pill" id="meta-links">0 links</div>
+      </div>
+      <div class="messages" id="msg-links"></div>
+      <div id="table-links"></div>
+    </div>
+  </div>
+
+  <!-- BUILD & BACKUP PANEL -->
+  <div class="panel" id="panel-build">
+
+    <div class="card" id="card-folder-showcase">
+      <h2>
+        Showcase data folder
+        <span class="pill" id="folder-status-showcase" style="background:#fff7eb;color:#6e4d18">Not connected</span>
+      </h2>
+      <p class="lede">Pick the <code>data/</code> folder inside your <code>showcase-site/</code> folder once. After that, <b>Save to showcase folder</b> writes <code>products.json</code> and <code>categories.json</code> directly. Refresh the showcase in your other tab to see changes.</p>
+      <div class="toolbar">
+        <button id="connect-folder-showcase">Pick showcase data folder</button>
+        <button class="alt" id="save-folder-showcase" disabled>Save to showcase folder</button>
+        <button class="ghost" id="load-folder-showcase" disabled>Reload from folder</button>
+      </div>
+      <div class="messages" id="msg-folder-showcase" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card" id="card-folder-hub">
+      <h2>
+        Brand Hub data folder
+        <span class="pill" id="folder-status-hub" style="background:#fff7eb;color:#6e4d18">Not connected</span>
+      </h2>
+      <p class="lede">Pick the <code>data/</code> folder inside your <code>brand-hub/</code> folder once. <b>Save to hub folder</b> writes <code>links.json</code> (containing both brand info and the link list). Refresh the hub to see changes.</p>
+      <div class="toolbar">
+        <button id="connect-folder-hub">Pick hub data folder</button>
+        <button class="alt" id="save-folder-hub" disabled>Save to hub folder</button>
+        <button class="ghost" id="load-folder-hub" disabled>Reload from folder</button>
+      </div>
+      <div class="messages" id="msg-folder-hub" style="margin-top:8px"></div>
+      <div id="folder-fallback" class="warn-box" style="display:none;margin-top:14px">
+        <b>Browser doesn't support direct file saving.</b> The File System Access API is available in Chrome, Edge, Brave, and Opera. In Safari and Firefox, use <b>Download data files</b> below and replace files manually.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Download data files</h2>
+      <p class="lede">Alternative if you can't (or don't want to) connect folders. Downloads the JSON files. Drop <code>products.json</code> and <code>categories.json</code> into <code>showcase-site/data/</code>, and <code>links.json</code> into <code>brand-hub/data/</code>.</p>
+      <div class="toolbar">
+        <button class="alt" id="download-data">Download all data files</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Full backup</h2>
+      <p class="lede">Save all your dashboard data (products, categories, brand info, hub links) as one JSON file you can keep on Dropbox, Google Drive, or anywhere safe. Restore from that file later or on another computer.</p>
+      <div class="toolbar">
+        <button class="alt" id="export-all">Export all as JSON</button>
+        <button class="ghost" id="import-all">Import from JSON</button>
+        <input type="file" id="file-import-all" class="file-input" accept=".json,application/json">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Reset everything</h2>
+      <p class="lede">Wipes all data from this browser. Useful if you want to start fresh or imported the wrong data. <b>Always export a backup first.</b></p>
+      <button class="danger" id="reset-all">Reset all data</button>
+    </div>
+
+    <div class="warn-box">
+      <b>Where your data lives:</b> Everything you edit here is stored in this browser's local storage on this computer. It does <b>not</b> sync between computers or browsers, and clearing your browser data will wipe it. <b>Export to JSON regularly</b> as a real backup, especially before clearing browser cache or moving to a new device.
+    </div>
+
+  </div>
+
+</div>
+
+<div class="footer-note">
+  This file should stay on your computer. <b>Never upload it to your public hosting</b> — it's an admin tool, not part of the showcase visitors see.
+</div>
+
+<script>
+  // ============================================================
+  // SCHEMAS — defines columns per data type
+  // ============================================================
+  const SCHEMAS = {
+    products: {
+      label: 'product',
+      columns: [
+        {key:'sku',         label:'SKU',         required:true,  width:130, placeholder:'QD-LR-160'},
+        {key:'name',        label:'Name',        required:true,  width:220, placeholder:'Living Room Triptych 160'},
+        {key:'cat',         label:'Category',    required:true,  width:120, placeholder:'triptych'},
+        {key:'description', label:'Description', required:false, width:340, placeholder:'Optional paragraph shown on the detail page'},
+        {key:'size',        label:'Size',        required:false, width:140, placeholder:'40×60cm × 3 / S/M/L / 100ml'},
+        {key:'material',    label:'Material',    required:false, width:200, placeholder:'Cotton / Crystal porcelain / Soy wax'},
+        {key:'price',       label:'Price',       required:false, width:120, placeholder:'PHP 4,850'},
+        {key:'img',         label:'Image',       required:false, width:240, placeholder:'QD-LR-160.jpg  (or: front.jpg, back.jpg  for multiple)'},
+        {key:'featured',    label:'Featured',    required:false, width:100, placeholder:'Yes or blank'},
+      ],
+      validate: (row, all, idx) => {
+        const errs = [];
+        if(!row.sku) errs.push({col:'sku', msg:'required'});
+        else if(all.some((r,i) => i !== idx && r.sku && r.sku === row.sku)) errs.push({col:'sku', msg:'duplicate'});
+        if(!row.name) errs.push({col:'name', msg:'required'});
+        if(!row.cat) errs.push({col:'cat', msg:'required'});
+        return errs;
+      }
+    },
+    categories: {
+      label: 'category',
+      columns: [
+        {key:'key',     label:'Key',     required:true,  width:140, placeholder:'triptych'},
+        {key:'label',   label:'Label',   required:true,  width:240, placeholder:'Wall Art — Triptych'},
+        {key:'img',     label:'Image',   required:false, width:180, placeholder:'triptych.jpg'},
+      ],
+      validate: (row, all, idx) => {
+        const errs = [];
+        if(!row.key) errs.push({col:'key', msg:'required'});
+        else if(/\s/.test(row.key)) errs.push({col:'key', msg:'no spaces allowed'});
+        else if(all.some((r,i) => i !== idx && r.key && r.key === row.key)) errs.push({col:'key', msg:'duplicate'});
+        if(!row.label) errs.push({col:'label', msg:'required'});
+        return errs;
+      }
+    },
+    brands: {
+      label: 'sub-brand',
+      columns: [
+        {key:'key',     label:'Key',     required:true,  width:160, placeholder:'quadro-decor (no spaces, lowercase)'},
+        {key:'name',    label:'Name',    required:true,  width:200, placeholder:'Quadro Decor'},
+        {key:'tagline', label:'Tagline', required:false, width:260, placeholder:'Wall art, mirrors & decor'},
+        {key:'accent',  label:'Accent',  required:false, width:140, placeholder:'ocean / terracotta / olive / plum / mustard / forest / rose / charcoal'},
+        {key:'logo',    label:'Logo',    required:false, width:200, placeholder:'images/quadro-logo.jpg  (optional)'},
+      ],
+      validate: (row, all, idx) => {
+        const errs = [];
+        const VALID_ACCENTS = ['', 'charcoal','terracotta','olive','ocean','plum','mustard','forest','rose'];
+        if(!row.key) errs.push({col:'key', msg:'required'});
+        else if(/\s/.test(row.key)) errs.push({col:'key', msg:'no spaces — use a hyphen'});
+        else if(all.some((r,i) => i !== idx && r.key && r.key === row.key)) errs.push({col:'key', msg:'duplicate'});
+        if(!row.name) errs.push({col:'name', msg:'required'});
+        if(row.accent && !VALID_ACCENTS.includes(String(row.accent).toLowerCase().trim()))
+          errs.push({col:'accent', msg:'must be one of: charcoal, terracotta, olive, ocean, plum, mustard, forest, rose'});
+        return errs;
+      }
+    },
+    links: {
+      label: 'link',
+      columns: [
+        {key:'brand',     label:'Brand',     required:false, width:140, placeholder:'quadro-decor  (leave blank only for umbrella-wide materials)'},
+        {key:'category',  label:'Category',  required:false, width:120, placeholder:'materials / social / shop / other'},
+        {key:'label',     label:'Label',     required:true,  width:200, placeholder:'View Product Catalog'},
+        {key:'subtitle',  label:'Subtitle',  required:false, width:200, placeholder:'PDF · Spring 2026'},
+        {key:'url',       label:'URL',       required:true,  width:280, placeholder:'https://... or materials/catalog.pdf'},
+        {key:'icon',      label:'Icon',      required:false, width:110, placeholder:'📘  /  images/icon.png  /  leave blank for YouTube auto-thumb'},
+        {key:'highlight', label:'Highlight', required:false, width:100, placeholder:'Yes or blank'},
+      ],
+      validate: (row, all, idx) => {
+        const errs = [];
+        const isMaterial = String(row.category || '').trim().toLowerCase() === 'materials';
+        // Brand is REQUIRED for non-materials links (they need to know which brand page to appear on).
+        // Brand is OPTIONAL for materials (blank brand = umbrella-wide, attributed to the parent brand).
+        if(!row.brand && !isMaterial){
+          errs.push({col:'brand', msg:'required (leave blank only when Category = materials)'});
+        }
+        if(!row.label) errs.push({col:'label', msg:'required'});
+        if(!row.url)   errs.push({col:'url',   msg:'required'});
+        // Warn if brand is given but doesn't match any defined sub-brand
+        if(row.brand && typeof state !== 'undefined' && Array.isArray(state.brands)){
+          if(!state.brands.some(b => b && b.key === row.brand))
+            errs.push({col:'brand', msg:'unknown brand key — define it in Brands above (or leave blank for umbrella-wide material)'});
+        }
+        return errs;
+      }
+    }
+  };
+
+  // ============================================================
+  // STATE — held in memory, persisted to localStorage on every change
+  // ============================================================
+  const STORAGE_KEY = 'showcase_admin_data_v2';
+  const LEGACY_STORAGE_KEY = 'showcase_admin_data_v1';
+  const DEFAULT_BRAND = {
+    name: 'Harmony & Homes',
+    tagline: 'A family of home and lifestyle brands',
+    logo: '',
+    footer: '© 2026 Harmony & Homes'
+  };
+  let state = loadState();
+
+  function loadState(){
+    // Try v2 (current shape) first
+    try {
+      const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      if(s && s.products && s.categories && s.links && s.brand){
+        // Backfill brands array if older v2 state predates the brands schema
+        if(!Array.isArray(s.brands)) s.brands = [];
+        return s;
+      }
+    } catch(e){}
+    // Migrate from v1: keep products + categories, drop materials, init brand + links + brands
+    try {
+      const old = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY) || 'null');
+      if(old && Array.isArray(old.products) && Array.isArray(old.categories)){
+        return {
+          products: old.products,
+          categories: old.categories,
+          brands: [],
+          links: [],
+          brand: {...DEFAULT_BRAND}
+        };
+      }
+    } catch(e){}
+    return { products:[], categories:[], brands:[], links:[], brand: {...DEFAULT_BRAND} };
+  }
+
+  let saveTimer = null;
+  function saveState(){
+    setStatus('unsaved', 'Saving...');
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        setStatus('saved', 'Saved to browser · ' + new Date().toLocaleTimeString());
+      } catch(e){
+        setStatus('unsaved', 'Save failed: ' + e.message);
+      }
+    }, 250);
+  }
+  function setStatus(cls, text){
+    const el = document.getElementById('saveStatus');
+    el.className = 'save-status ' + cls;
+    el.textContent = text;
+  }
+
+  // ============================================================
+  // RENDERING — table editor per data type
+  // ============================================================
+  function renderTable(type){
+    const schema = SCHEMAS[type];
+    const data = state[type];
+    const wrap = document.getElementById('table-' + type);
+    document.getElementById('cnt-' + type).textContent = data.length;
+    document.getElementById('meta-' + type).textContent = `${data.length} ${schema.label}${data.length===1?'':'s'}`;
+
+    if(!data.length){
+      const hint = type === 'brands'
+        ? `Sub-brands are the buttons on the Brand Hub's home page. Add at least one before defining links — links reference sub-brands by their key.`
+        : type === 'links'
+          ? `Links live inside their brand's page (or in the home Materials section if <code>category=materials</code>). Add a sub-brand first.`
+          : `Add rows one at a time, paste a filled-in spreadsheet via <b>Import CSV</b>, or grab a starter file via <b>CSV template</b>.`;
+      wrap.innerHTML = `
+        <div class="empty-state">
+          <h3>No ${schema.label}s yet</h3>
+          <p>${hint}</p>
+          <p style="margin-top:10px;font-size:12.5px;color:var(--muted)">
+            Quick start: click <b>+ Add ${schema.label}</b> above to insert a blank row, or click <b>CSV template</b> to download a sample file you can fill in via Excel / Google Sheets.
+          </p>
+        </div>`;
+      return;
+    }
+
+    const head = `<thead><tr>
+      <th class="row-num"></th>
+      ${schema.columns.map(c => `<th class="${c.required?'req':''}" style="min-width:${c.width}px">${c.label}</th>`).join('')}
+      <th class="actions">Actions</th>
+    </tr></thead>`;
+
+    const body = `<tbody>${data.map((row, idx) => {
+      const errors = schema.validate(row, data, idx);
+      return `<tr data-idx="${idx}" draggable="true">
+        <td class="row-num" title="Drag to reorder">${idx+1}</td>
+        ${schema.columns.map(c => {
+          const err = errors.find(e => e.col === c.key);
+          const v = row[c.key] || '';
+          return `<td><input data-type="${type}" data-idx="${idx}" data-col="${c.key}" value="${escapeAttr(v)}" placeholder="${c.placeholder}" class="${err?'invalid':''}" title="${err?err.msg:''}"></td>`;
+        }).join('')}
+        <td class="actions">
+          <button data-action="up" data-type="${type}" data-idx="${idx}" title="Move up" ${idx===0?'disabled':''}>↑</button>
+          <button data-action="down" data-type="${type}" data-idx="${idx}" title="Move down" ${idx===data.length-1?'disabled':''}>↓</button>
+          <button data-action="del" data-type="${type}" data-idx="${idx}" title="Delete" class="del">✕</button>
+        </td>
+      </tr>`;
+    }).join('')}</tbody>`;
+
+    wrap.innerHTML = `<div class="table-wrap"><table class="editor">${head}${body}</table></div>`;
+  }
+  function escapeAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+  function renderAll(){
+    renderTable('products');
+    renderTable('categories');
+    renderTable('brands');
+    renderTable('links');
+    renderBrandForm();
+  }
+
+  function renderBrandForm(){
+    const b = state.brand || (state.brand = {...DEFAULT_BRAND});
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if(el && el.value !== val) el.value = val;
+    };
+    set('brand-name',    b.name    || '');
+    set('brand-tagline', b.tagline || '');
+    set('brand-logo',    b.logo    || '');
+    set('brand-footer',  b.footer  || '');
+  }
+
+  // Brand form — auto-save on input
+  document.body.addEventListener('input', e => {
+    if(!e.target.id || !e.target.id.startsWith('brand-')) return;
+    const key = e.target.id.replace('brand-','');
+    if(!state.brand) state.brand = {...DEFAULT_BRAND};
+    state.brand[key] = e.target.value;
+    saveState();
+  });
+
+  // ============================================================
+  // EVENT HANDLERS
+  // ============================================================
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('panel-' + t.dataset.panel).classList.add('active');
+    });
+  });
+
+  // Inline cell editing (delegated)
+  document.body.addEventListener('input', e => {
+    if(e.target.tagName !== 'INPUT' || !e.target.dataset.type) return;
+    const {type, idx, col} = e.target.dataset;
+    state[type][parseInt(idx)][col] = e.target.value.trim();
+    saveState();
+    // re-validate this row's required fields
+    const row = state[type][parseInt(idx)];
+    const errors = SCHEMAS[type].validate(row, state[type], parseInt(idx));
+    document.querySelectorAll(`input[data-type="${type}"][data-idx="${idx}"]`).forEach(inp => {
+      const err = errors.find(e => e.col === inp.dataset.col);
+      if(err){ inp.classList.add('invalid'); inp.title = err.msg; }
+      else { inp.classList.remove('invalid'); inp.title = ''; }
+    });
+  });
+
+  // Row actions (delegated)
+  document.body.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-action]');
+    if(!btn) return;
+    const {action, type, idx} = btn.dataset;
+    const i = parseInt(idx);
+    if(action === 'del'){
+      if(!confirm(`Delete row ${i+1}?`)) return;
+      state[type].splice(i, 1);
+      saveState();
+      renderTable(type);
+    } else if(action === 'up' && i > 0){
+      [state[type][i-1], state[type][i]] = [state[type][i], state[type][i-1]];
+      saveState();
+      renderTable(type);
+    } else if(action === 'down' && i < state[type].length - 1){
+      [state[type][i+1], state[type][i]] = [state[type][i], state[type][i+1]];
+      saveState();
+      renderTable(type);
+    }
+  });
+
+  // Add row buttons
+  ['products','categories','brands','links'].forEach(type => {
+    document.getElementById('add-' + type).addEventListener('click', () => {
+      state[type].push({});
+      saveState();
+      renderTable(type);
+      // focus the first cell of the new row
+      setTimeout(() => {
+        const inputs = document.querySelectorAll(`input[data-type="${type}"][data-idx="${state[type].length-1}"]`);
+        if(inputs.length) inputs[0].focus();
+      }, 0);
+    });
+
+    document.getElementById('clear-' + type).addEventListener('click', () => {
+      if(!state[type].length) return;
+      if(!confirm(`Delete all ${state[type].length} ${SCHEMAS[type].label}${state[type].length===1?'':'s'}?\n\nThis cannot be undone. Consider exporting CSV first as backup.`)) return;
+      state[type] = [];
+      saveState();
+      renderTable(type);
+    });
+
+    // CSV import
+    document.getElementById('import-' + type).addEventListener('click', () => {
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = '.csv,text/csv';
+      inp.addEventListener('change', e => {
+        const file = e.target.files[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => importCsv(type, ev.target.result);
+        reader.readAsText(file);
+      });
+      inp.click();
+    });
+
+    // CSV export
+    document.getElementById('export-' + type).addEventListener('click', () => exportCsv(type));
+
+    // CSV template download
+    const tplBtn = document.getElementById('template-' + type);
+    if(tplBtn) tplBtn.addEventListener('click', () => downloadCsvTemplate(type));
+  });
+
+  // Drag & drop for reorder
+  let draggingRow = null;
+  document.body.addEventListener('dragstart', e => {
+    const tr = e.target.closest('tr[data-idx]'); if(!tr) return;
+    draggingRow = tr; tr.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  document.body.addEventListener('dragend', e => {
+    if(draggingRow) draggingRow.classList.remove('dragging');
+    draggingRow = null;
+  });
+  document.body.addEventListener('dragover', e => {
+    const tr = e.target.closest('tr[data-idx]');
+    if(tr && draggingRow && tr !== draggingRow) e.preventDefault();
+  });
+  document.body.addEventListener('drop', e => {
+    const tr = e.target.closest('tr[data-idx]');
+    if(!tr || !draggingRow || tr === draggingRow) return;
+    e.preventDefault();
+    const fromIdx = parseInt(draggingRow.dataset.idx);
+    const toIdx = parseInt(tr.dataset.idx);
+    const type = document.querySelector('.tab.active').dataset.panel;
+    if(!['products','categories','brands','links'].includes(type)) return;
+    const [moved] = state[type].splice(fromIdx, 1);
+    state[type].splice(toIdx, 0, moved);
+    saveState();
+    renderTable(type);
+  });
+
+  // ============================================================
+  // CSV IMPORT/EXPORT
+  // ============================================================
+  function parseCsv(text){
+    if(text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const rows = [];
+    let cur = [], field = '', inQ = false;
+    for(let i=0; i<text.length; i++){
+      const c = text[i];
+      if(inQ){
+        if(c === '"' && text[i+1] === '"'){ field += '"'; i++; }
+        else if(c === '"'){ inQ = false; }
+        else field += c;
+      } else {
+        if(c === ','){ cur.push(field); field = ''; }
+        else if(c === '\n'){ cur.push(field); rows.push(cur); cur = []; field = ''; }
+        else if(c === '"' && field === ''){ inQ = true; }
+        else field += c;
+      }
+    }
+    if(field || cur.length > 0){ cur.push(field); rows.push(cur); }
+    return rows.filter(r => r.some(f => f.trim() !== ''));
+  }
+
+  function importCsv(type, text){
+    showMsg(type, 'clear');
+    const rows = parseCsv(text);
+    if(rows.length < 2){ showMsg(type, 'error', 'CSV must have a header row plus at least one data row.'); return; }
+    const headers = rows[0].map(h => h.trim().toLowerCase());
+    // Map "category" → "cat" and "image" → "img" for products
+    const aliases = type === 'products' ? {category:'cat', image:'img'} : type === 'categories' ? {image:'img'} : {};
+    const mapped = headers.map(h => aliases[h] || h);
+    const items = rows.slice(1).map(row => {
+      const obj = {};
+      mapped.forEach((h, i) => {
+        const v = (row[i] || '').trim();
+        if(v !== '') obj[h] = v;
+      });
+      return obj;
+    });
+    if(state[type].length){
+      if(!confirm(`Replace the ${state[type].length} existing ${SCHEMAS[type].label}${state[type].length===1?'':'s'} with ${items.length} from this CSV?`)){
+        return;
+      }
+    }
+    state[type] = items;
+    saveState();
+    renderTable(type);
+    showMsg(type, 'ok', `Imported ${items.length} ${SCHEMAS[type].label}${items.length===1?'':'s'} from CSV.`);
+  }
+
+  function exportCsv(type){
+    if(!state[type].length){ showMsg(type, 'error', 'Nothing to export — add some rows first. Or click "CSV template" to download a starter file you can fill in.'); return; }
+    const cols = SCHEMAS[type].columns.map(c => c.key);
+    // Display "cat" as "category", "img" as "image" in CSV header
+    const headerNames = cols.map(c => c === 'cat' ? 'category' : c === 'img' ? 'image' : c);
+    const header = headerNames.join(',');
+    const rows = state[type].map(row => cols.map(c => csvEsc(row[c] || '')).join(','));
+    const csv = header + '\n' + rows.join('\n');
+    download(`${type}-${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv');
+  }
+
+  // Sample rows for each data type — used by the CSV template downloader.
+  // Each row is keyed by column key; missing keys render as blank.
+  const TEMPLATE_SAMPLES = {
+    products: [
+      { sku:'QD-LR-160', name:'Living Room Triptych 160', cat:'triptych', description:'Three-panel wall art, hand-finished frames', size:'40×60cm × 3', material:'Canvas + walnut frame', price:'PHP 4,850', img:'QD-LR-160.jpg', featured:'Yes' },
+      { sku:'QD-MR-024', name:'Round Bevel Mirror',       cat:'mirrors',  description:'',                                            size:'60cm Ø',     material:'Bevelled glass + brass',  price:'PHP 2,950', img:'QD-MR-024.jpg', featured:'' },
+      { sku:'QD-CL-007', name:'Brass Sweep Clock',         cat:'clocks',   description:'Silent sweep movement, matte brass face',  size:'30cm Ø',     material:'Brushed brass',           price:'PHP 1,650', img:'QD-CL-007.jpg', featured:'' },
+    ],
+    categories: [
+      { key:'triptych', label:'Wall Art — Triptych', img:'triptych.jpg' },
+      { key:'mirrors',  label:'Mirrors',              img:'mirrors.jpg' },
+      { key:'clocks',   label:'Clocks',               img:'clocks.jpg' },
+    ],
+    brands: [
+      { key:'quadro-decor', name:'Quadro Decor', tagline:'Wall art, mirrors & decor for Filipino homes', accent:'ocean',       logo:'' },
+      { key:'brand-b',      name:'Brand B',      tagline:'Tagline placeholder',                          accent:'terracotta',  logo:'' },
+    ],
+    links: [
+      { brand:'quadro-decor', category:'materials', label:'Spring Catalog 2026', subtitle:'PDF · 24 pages',           url:'materials/quadro-spring-2026.pdf',     icon:'📘',  highlight:'Yes' },
+      { brand:'quadro-decor', category:'social',    label:'Instagram',           subtitle:'@quadrodecor',             url:'https://instagram.com/quadrodecor',    icon:'📷',  highlight:'' },
+      { brand:'quadro-decor', category:'shop',      label:'Shop on Lazada',      subtitle:'Free shipping PH',         url:'https://www.lazada.com.ph/shop/quadro-decor', icon:'🛒', highlight:'' },
+      { brand:'brand-b',      category:'other',     label:'Contact Us',          subtitle:'Wholesale enquiries',      url:'mailto:hello@harmonynhomes.com',       icon:'✉️',  highlight:'' },
+    ],
+  };
+
+  function downloadCsvTemplate(type){
+    const cols = SCHEMAS[type].columns.map(c => c.key);
+    const headerNames = cols.map(c => c === 'cat' ? 'category' : c === 'img' ? 'image' : c);
+    const samples = TEMPLATE_SAMPLES[type] || [];
+    const header = headerNames.join(',');
+    const rows = samples.map(s => cols.map(c => csvEsc(s[c] != null ? s[c] : '')).join(','));
+    const csv = header + (rows.length ? '\n' + rows.join('\n') : '') + '\n';
+    download(`${type}-template.csv`, csv, 'text/csv');
+    showMsg(type, 'ok', `Downloaded <b>${type}-template.csv</b> with ${rows.length} example row${rows.length===1?'':'s'}. Edit it in Excel or Google Sheets, then use <b>Import CSV</b> to bring it back in.`);
+  }
+  function csvEsc(s){
+    s = String(s||'');
+    if(s.includes(',') || s.includes('"') || s.includes('\n')) return '"'+s.replace(/"/g,'""')+'"';
+    return s;
+  }
+  function download(filename, content, mime='text/plain'){
+    const blob = new Blob([content], {type:mime});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function showMsg(type, kind, text){
+    const box = document.getElementById('msg-' + type);
+    if(kind === 'clear'){ box.innerHTML = ''; return; }
+    const icon = kind==='error' ? '!' : kind==='warn' ? '?' : '✓';
+    const cls = kind==='error' ? 'msg-error' : kind==='warn' ? 'msg-warn' : 'msg-ok';
+    const div = document.createElement('div');
+    div.className = 'msg ' + cls;
+    div.innerHTML = `<span class="msg-icon">${icon}</span><div>${escapeAttr(text)}</div>`;
+    box.appendChild(div);
+    if(kind === 'ok') setTimeout(() => div.remove(), 5000);
+  }
+
+  // ============================================================
+  // FULL BACKUP / RESTORE
+  // ============================================================
+  document.getElementById('export-all').addEventListener('click', () => {
+    const backup = {
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      products: state.products,
+      categories: state.categories,
+      brands: state.brands,
+      links: state.links,
+      brand: state.brand,
+    };
+    download(`showcase-backup-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(backup, null, 2), 'application/json');
+  });
+
+  const fileImportAll = document.getElementById('file-import-all');
+  document.getElementById('import-all').addEventListener('click', () => fileImportAll.click());
+  fileImportAll.addEventListener('change', e => {
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if(!data.products || !data.categories) throw new Error('Missing products or categories');
+        const isV2 = !!(data.links !== undefined || data.brand);
+        const linksCount  = isV2 ? (data.links?.length || 0)  : 0;
+        const brandsCount = isV2 ? (data.brands?.length || 0) : 0;
+        const summary = isV2
+          ? `${data.products.length} products, ${data.categories.length} categories, ${brandsCount} sub-brand${brandsCount===1?'':'s'}, ${linksCount} hub link${linksCount===1?'':'s'}${data.brand?', plus umbrella brand info':''}`
+          : `${data.products.length} products, ${data.categories.length} categories  (legacy backup — materials will be discarded)`;
+        if(!confirm(`Replace all current data with this backup?\n\n${summary}`)) return;
+        state.products   = data.products;
+        state.categories = data.categories;
+        state.brands     = Array.isArray(data.brands) ? data.brands : [];
+        state.links      = Array.isArray(data.links)  ? data.links  : [];
+        state.brand      = (data.brand && typeof data.brand === 'object') ? data.brand : {...DEFAULT_BRAND};
+        saveState();
+        renderAll();
+        alert('Backup restored successfully.');
+      } catch(err){
+        alert('Could not read backup: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  document.getElementById('reset-all').addEventListener('click', () => {
+    const total = state.products.length + state.categories.length + state.brands.length + state.links.length;
+    if(total === 0){ alert('Nothing to reset.'); return; }
+    if(!confirm(`Permanently delete all data?\n\n${state.products.length} products\n${state.categories.length} categories\n${state.brands.length} sub-brands\n${state.links.length} hub links\n\nUmbrella brand info will also reset.\n\nThis cannot be undone. Export a backup first if you might need this data later.`)) return;
+    state = { products:[], categories:[], brands:[], links:[], brand: {...DEFAULT_BRAND} };
+    saveState();
+    renderAll();
+  });
+
+  // ============================================================
+  // DATA FOLDERS (File System Access API) — two folders, one each for
+  // showcase and brand hub. Wholly separate handles so users can connect
+  // either one without touching the other.
+  // ============================================================
+  const FSA_SUPPORTED = 'showDirectoryPicker' in window;
+  if(!FSA_SUPPORTED){
+    document.getElementById('folder-fallback').style.display = 'block';
+    ['connect-folder-showcase','connect-folder-hub'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el){ el.disabled = true; el.textContent = 'Not supported in this browser'; }
+    });
+  }
+
+  // Generic factory — wires up Pick / Save / Load for one folder + one set of files.
+  // - kind: 'showcase' | 'hub'
+  // - filenames: array of files this folder owns
+  // - buildPayload: (state) => { [filename]: jsonValue }  — what gets written on Save
+  // - applyLoaded: ({[filename]: parsedJson}) => void     — how to merge loaded data into state
+  // - summary: ({[filename]: parsedJson}) => string       — human-friendly recap
+  function makeFolderHandlers({kind, filenames, buildPayload, applyLoaded, summary, pickerId}){
+    let handle = null;
+    const status = document.getElementById(`folder-status-${kind}`);
+    const msgBox = document.getElementById(`msg-folder-${kind}`);
+    const btnConnect = document.getElementById(`connect-folder-${kind}`);
+    const btnSave    = document.getElementById(`save-folder-${kind}`);
+    const btnLoad    = document.getElementById(`load-folder-${kind}`);
+
+    function msg(level, html){
+      msgBox.innerHTML = '';
+      const icon = level==='error' ? '!' : level==='warn' ? '?' : '✓';
+      const cls  = level==='error' ? 'msg-error' : level==='warn' ? 'msg-warn' : 'msg-ok';
+      const div = document.createElement('div');
+      div.className = 'msg ' + cls;
+      div.innerHTML = `<span class="msg-icon">${icon}</span><div>${html}</div>`;
+      msgBox.appendChild(div);
+    }
+
+    btnConnect.addEventListener('click', async () => {
+      if(!FSA_SUPPORTED) return;
+      try {
+        handle = await window.showDirectoryPicker({mode:'readwrite', id: pickerId});
+        let foundJson = 0;
+        for await (const [name] of handle.entries()){
+          if(filenames.includes(name)) foundJson++;
+        }
+        status.textContent = `Connected: ${handle.name}/`;
+        status.style.background = '#e8f0eb';
+        status.style.color = 'var(--green)';
+        btnSave.disabled = false;
+        btnLoad.disabled = false;
+        if(foundJson === 0){
+          msg('warn', `Folder picked, but none of ${filenames.join(' / ')} found. The first save will create them.`);
+        } else {
+          msg('ok', `Connected to <b>${handle.name}/</b> (${foundJson} file${foundJson===1?'':'s'} found). Use the buttons above to save or reload.`);
+        }
+      } catch(err){
+        if(err.name !== 'AbortError') msg('error', 'Could not connect: ' + err.message);
+      }
+    });
+
+    btnSave.addEventListener('click', async () => {
+      if(!handle) return;
+      try {
+        const payload = buildPayload(state);
+        for(const [name, value] of Object.entries(payload)){
+          const fileHandle = await handle.getFileHandle(name, {create:true});
+          const writable = await fileHandle.createWritable();
+          await writable.write(JSON.stringify(value, null, 2));
+          await writable.close();
+        }
+        const time = new Date().toLocaleTimeString();
+        msg('ok', `Saved at ${time}. Refresh the site in your other tab to see changes.`);
+      } catch(err){
+        msg('error', 'Save failed: ' + err.message);
+      }
+    });
+
+    btnLoad.addEventListener('click', async () => {
+      if(!handle) return;
+      if(!confirm(`Replace this dashboard's ${kind === 'showcase' ? 'products and categories' : 'brand info and hub links'} with what's in the folder right now?`)) return;
+      try {
+        const loaded = {};
+        for(const name of filenames){
+          try {
+            const fh = await handle.getFileHandle(name);
+            const file = await fh.getFile();
+            const text = await file.text();
+            loaded[name] = JSON.parse(text);
+          } catch(err){
+            if(err.name !== 'NotFoundError') throw err;
+            loaded[name] = null;
+          }
+        }
+        applyLoaded(loaded);
+        saveState();
+        renderAll();
+        msg('ok', summary(loaded));
+      } catch(err){
+        msg('error', 'Load failed: ' + err.message);
+      }
+    });
+  }
+
+  // Showcase folder: products.json + categories.json
+  makeFolderHandlers({
+    kind: 'showcase',
+    pickerId: 'showcase-data',
+    filenames: ['products.json','categories.json'],
+    buildPayload: s => ({
+      'products.json':   s.products,
+      'categories.json': s.categories,
+    }),
+    applyLoaded: l => {
+      if(Array.isArray(l['products.json']))   state.products   = l['products.json'];
+      if(Array.isArray(l['categories.json'])) state.categories = l['categories.json'];
+    },
+    summary: l => `Loaded ${state.products.length} products and ${state.categories.length} categories from folder.`
+  });
+
+  // Hub folder: links.json (brand + links combined, matching brand-hub's expected format)
+  makeFolderHandlers({
+    kind: 'hub',
+    pickerId: 'hub-data',
+    filenames: ['links.json'],
+    buildPayload: s => ({
+      'links.json': buildHubFilePayload(s)
+    }),
+    applyLoaded: l => {
+      const f = l['links.json'];
+      if(f && typeof f === 'object'){
+        if(f.brand && typeof f.brand === 'object') state.brand = f.brand;
+        if(Array.isArray(f.brands)) state.brands = f.brands;
+        if(Array.isArray(f.links))  state.links  = f.links;
+      }
+    },
+    summary: l => `Loaded brand info, ${state.brands.length} sub-brand${state.brands.length===1?'':'s'}, and ${state.links.length} link${state.links.length===1?'':'s'} from folder.`
+  });
+
+  // Build the links.json payload — combines brand info + sub-brands + links
+  // and auto-assigns IDs, normalizes booleans, and drops blank/invalid rows.
+  function buildHubFilePayload(s){
+    const truthy = v => {
+      if (v === true || v === 1) return true;
+      const t = String(v || '').trim().toLowerCase();
+      return ['y','yes','true','1','x','✓'].includes(t);
+    };
+    const brands = (s.brands || []).map(row => ({
+      key:     String(row.key || '').trim(),
+      name:    String(row.name || '').trim(),
+      tagline: String(row.tagline || '').trim(),
+      accent:  String(row.accent || '').trim().toLowerCase(),
+      logo:    String(row.logo || '').trim()
+    })).filter(b => b.key && b.name);
+
+    return {
+      brand: {
+        name:    (s.brand && s.brand.name)    || DEFAULT_BRAND.name,
+        tagline: (s.brand && s.brand.tagline) || '',
+        logo:    (s.brand && s.brand.logo)    || '',
+        footer:  (s.brand && s.brand.footer)  || ''
+      },
+      brands,
+      links: (s.links || []).map((row, i) => ({
+        id:        row.id || `lnk-${String(i+1).padStart(3,'0')}`,
+        brand:     String(row.brand || '').trim(),
+        category:  String(row.category || '').trim().toLowerCase(),
+        label:     String(row.label || '').trim(),
+        subtitle:  String(row.subtitle || '').trim(),
+        url:       String(row.url || '').trim(),
+        icon:      String(row.icon || '').trim(),
+        highlight: truthy(row.highlight)
+      })).filter(r => r.label && r.url && (r.brand || r.category === 'materials'))
+    };
+  }
+
+  // Download data files (fallback path) — all three files in one click
+  document.getElementById('download-data').addEventListener('click', () => {
+    const hasAny = state.products.length || state.categories.length || state.links.length;
+    if(!hasAny){
+      alert('No data to download yet. Add some products, categories, or hub links first.');
+      return;
+    }
+    download('products.json',   JSON.stringify(state.products,   null, 2), 'application/json');
+    setTimeout(() => download('categories.json', JSON.stringify(state.categories, null, 2), 'application/json'), 200);
+    setTimeout(() => download('links.json',      JSON.stringify(buildHubFilePayload(state), null, 2), 'application/json'), 400);
+  });
+
+  // ============================================================
+  // INITIAL RENDER
+  // ============================================================
+  renderAll();
+  setStatus('saved',
+    state.products.length + state.categories.length + state.brands.length + state.links.length === 0
+      ? 'Empty — add data to get started'
+      : 'Loaded from local storage'
+  );
+</script>
+</body>
+</html>

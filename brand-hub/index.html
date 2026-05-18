@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Harmony &amp; Homes — Links</title>
+  <meta name="description" content="A family of home decor and lifestyle brands." />
+  <meta property="og:title" content="Harmony &amp; Homes" />
+  <meta property="og:description" content="A family of home decor and lifestyle brands." />
+  <meta name="theme-color" content="#F4EFE6" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* =========================================================
+       Design tokens — change these to re-skin the entire hub.
+       Accent colors are picked per sub-brand via data-accent.
+       ========================================================= */
+    :root {
+      --bg:           #F4EFE6;
+      --bg-tint:      #EFE8DB;
+      --surface:      #FFFFFF;
+      --surface-warm: #FBF7F0;
+      --ink:          #1F1A14;
+      --ink-soft:     #4A4036;
+      --ink-muted:    #8A7C6B;
+      --line:         #E5DDD0;
+      --accent:       #8B6B3D;   /* default umbrella accent */
+      --accent-deep:  #6B4F26;
+      --shadow-sm:    0 1px 2px rgba(31, 26, 20, 0.04), 0 1px 3px rgba(31, 26, 20, 0.05);
+      --shadow-md:    0 4px 16px rgba(31, 26, 20, 0.08), 0 2px 4px rgba(31, 26, 20, 0.04);
+      --shadow-lg:    0 12px 32px rgba(31, 26, 20, 0.10), 0 4px 8px rgba(31, 26, 20, 0.04);
+      --radius:       14px;
+      --radius-lg:    20px;
+    }
+
+    /* Per-brand accent palette — referenced by data-accent="<name>" */
+    [data-accent="charcoal"]   { --brand-accent: #1F1A14; --brand-accent-soft: #4A4036; }
+    [data-accent="terracotta"] { --brand-accent: #B8654A; --brand-accent-soft: #8A4632; }
+    [data-accent="olive"]      { --brand-accent: #7A8156; --brand-accent-soft: #5A6040; }
+    [data-accent="ocean"]      { --brand-accent: #3D7A8A; --brand-accent-soft: #2D5C68; }
+    [data-accent="plum"]       { --brand-accent: #7E5275; --brand-accent-soft: #5E3D58; }
+    [data-accent="mustard"]    { --brand-accent: #C49645; --brand-accent-soft: #946F32; }
+    [data-accent="forest"]     { --brand-accent: #3D5D50; --brand-accent-soft: #2D453B; }
+    [data-accent="rose"]       { --brand-accent: #B14B62; --brand-accent-soft: #8A3A4D; }
+    /* Fallback if accent missing or unknown */
+    [data-accent=""]           { --brand-accent: var(--accent); --brand-accent-soft: var(--accent-deep); }
+
+    /* =========================================================
+       Reset / base
+       ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139, 107, 61, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 50% 100%, var(--bg-tint) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: multiply;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+
+    /* =========================================================
+       Container (shared by both views)
+       ========================================================= */
+    .view {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 56px 20px 40px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    .view--brand {
+      padding-top: 24px;
+    }
+
+    /* Home view fade-in */
+    body.route-home #brandView,
+    body.route-home #materialsView { display: none; }
+    body.route-brand #hubView,
+    body.route-brand #materialsView { display: none; }
+    body.route-materials #hubView,
+    body.route-materials #brandView { display: none; }
+    body.route-home #hubView,
+    body.route-brand #brandView,
+    body.route-materials #materialsView {
+      animation: fadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Materials card on home — styled like a brand card but visually distinct */
+    .brand-card--resources {
+      border-left-color: var(--accent);
+      margin-top: 8px;
+    }
+    .brand-card--resources .brand-card__logo {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--bg-tint) 100%);
+    }
+    .brand-card--resources .brand-card__logo-letter {
+      font-size: 24px;
+      color: var(--ink);
+    }
+
+    /* =========================================================
+       Home view — umbrella identity + brand grid
+       ========================================================= */
+    .hub__header { text-align: center; margin-bottom: 36px; }
+    .hub__logo {
+      width: 92px; height: 92px; border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface-warm) 100%);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .hub__logo img { width: 100%; height: 100%; object-fit: cover; }
+    .hub__logo-fallback {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-variation-settings: "opsz" 144;
+      font-size: 36px; letter-spacing: -0.02em;
+      color: var(--accent-deep);
+      line-height: 1;
+    }
+    .hub__name {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-variation-settings: "opsz" 144;
+      font-size: clamp(28px, 6vw, 36px);
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0 0 8px;
+      line-height: 1.1;
+    }
+    .hub__tagline {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin: 0 auto;
+      max-width: 320px;
+      line-height: 1.5;
+    }
+    .hub__divider {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+      margin: 24px 0 12px;
+      color: var(--ink-muted);
+    }
+    .hub__divider::before, .hub__divider::after {
+      content: "";
+      height: 1px; width: 40px;
+      background: linear-gradient(to right, transparent, var(--line), transparent);
+    }
+    .hub__divider span {
+      font-family: "Fraunces", Georgia, serif;
+      font-style: italic;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .brand-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Push footer to bottom of viewport when content is short */
+    #hubView .hub__footer { margin-top: auto; }
+
+    /* A brand card — the buttons on the home page that drill into each brand */
+    .brand-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  box-shadow 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  border-color 0.18s ease;
+      text-align: left;
+      width: 100%;
+      border-left: 4px solid var(--brand-accent, var(--accent));
+      opacity: 0;
+      animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    .brand-card:nth-child(1) { animation-delay: 0.05s; }
+    .brand-card:nth-child(2) { animation-delay: 0.10s; }
+    .brand-card:nth-child(3) { animation-delay: 0.15s; }
+    .brand-card:nth-child(4) { animation-delay: 0.20s; }
+    .brand-card:nth-child(5) { animation-delay: 0.25s; }
+    .brand-card:nth-child(n+6) { animation-delay: 0.30s; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .brand-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--brand-accent, var(--accent));
+    }
+    .brand-card:active { transform: translateY(0); }
+
+    .brand-card__logo {
+      flex-shrink: 0;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--surface-warm);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .brand-card__logo img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-card__logo-letter {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-size: 22px;
+      color: var(--brand-accent-soft, var(--accent-deep));
+    }
+
+    .brand-card__text {
+      flex: 1;
+      min-width: 0;
+      display: flex; flex-direction: column;
+      gap: 2px;
+    }
+    .brand-card__name {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-variation-settings: "opsz" 144;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .brand-card__tagline {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .brand-card__arrow {
+      flex-shrink: 0;
+      color: var(--ink-muted);
+      font-size: 20px;
+      transition: transform 0.2s ease, color 0.18s ease;
+    }
+    .brand-card:hover .brand-card__arrow {
+      transform: translateX(3px);
+      color: var(--brand-accent, var(--accent));
+    }
+
+    /* =========================================================
+       Brand view — back button + brand identity + filtered links
+       ========================================================= */
+    .brand-view__topbar {
+      display: flex; align-items: center; justify-content: flex-start;
+      margin-bottom: 18px;
+    }
+    .brand-view__back {
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 14px 7px 11px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+    .brand-view__back:hover {
+      background: var(--surface);
+      border-color: var(--brand-accent, var(--accent));
+      color: var(--brand-accent-soft, var(--accent-deep));
+    }
+    .brand-view__back-arrow { font-size: 16px; line-height: 1; }
+
+    .brand-view__identity {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+    /* Accent line beneath the divider */
+    .brand-view__identity::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 2px;
+      background: var(--brand-accent, var(--accent));
+      border-radius: 1px;
+    }
+    .brand-view__logo {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .brand-view__logo img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-view__logo-letter {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-size: 32px;
+      color: var(--brand-accent-soft, var(--accent-deep));
+    }
+    .brand-view__name {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-variation-settings: "opsz" 144;
+      font-size: clamp(24px, 5vw, 30px);
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0 0 6px;
+      line-height: 1.15;
+    }
+    .brand-view__tagline {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin: 0 auto;
+      max-width: 320px;
+      line-height: 1.4;
+    }
+
+    .brand-view__links {
+      display: flex; flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    /* Link buttons (used on brand pages) */
+    .link {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  box-shadow 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  border-color 0.18s ease,
+                  background-color 0.18s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0;
+      animation: linkIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    .link:nth-child(1)  { animation-delay: 0.03s; }
+    .link:nth-child(2)  { animation-delay: 0.06s; }
+    .link:nth-child(3)  { animation-delay: 0.09s; }
+    .link:nth-child(4)  { animation-delay: 0.12s; }
+    .link:nth-child(5)  { animation-delay: 0.15s; }
+    .link:nth-child(6)  { animation-delay: 0.18s; }
+    .link:nth-child(7)  { animation-delay: 0.21s; }
+    .link:nth-child(8)  { animation-delay: 0.24s; }
+    .link:nth-child(n+9){ animation-delay: 0.27s; }
+    @keyframes linkIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .link:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--brand-accent, rgba(139, 107, 61, 0.30));
+    }
+    .link:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
+
+    .link--highlight {
+      background: var(--brand-accent-soft, #1F1A14);
+      color: #F8F2E5;
+      border-color: var(--brand-accent-soft, #1F1A14);
+    }
+    .link--highlight .link__label { color: #F8F2E5; }
+    .link--highlight .link__subtitle { color: rgba(248, 242, 229, 0.62); }
+    .link--highlight .link__icon { background: rgba(248, 242, 229, 0.08); color: #F8F2E5; }
+    .link--highlight .link__arrow { color: rgba(248, 242, 229, 0.55); }
+    .link--highlight:hover { border-color: var(--brand-accent, #F8F2E5); }
+
+    .link__icon {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--surface-warm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      overflow: hidden;
+    }
+    .link__icon img { width: 24px; height: 24px; object-fit: contain; }
+    /* Video thumbnails (auto-detected from YouTube URLs) fill the whole
+       icon container instead of sitting small in the middle — gives links
+       a "video tile" feel without breaking the row layout. */
+    .link__icon img.link__icon-img--video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .link__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .link__label {
+      font-size: 15px; font-weight: 600;
+      color: var(--ink); line-height: 1.3; letter-spacing: -0.005em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .link__subtitle {
+      font-size: 12.5px; color: var(--ink-muted); line-height: 1.3;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .link__arrow {
+      flex-shrink: 0; color: var(--ink-muted);
+      font-size: 18px; line-height: 1;
+      transition: transform 0.2s ease, color 0.18s ease;
+    }
+    .link:hover .link__arrow {
+      transform: translateX(3px);
+      color: var(--brand-accent, var(--accent));
+    }
+
+    /* =========================================================
+       Footer & states
+       ========================================================= */
+    .hub__footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--ink-muted);
+      letter-spacing: 0.02em;
+    }
+    .hub__footer-mark {
+      font-family: "Fraunces", Georgia, serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .hub__empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--ink-muted);
+      font-size: 14px;
+    }
+
+    /* =========================================================
+       Mobile refinements
+       ========================================================= */
+    @media (max-width: 480px) {
+      .view { padding: 40px 16px 32px; }
+      .view--brand { padding-top: 18px; }
+      .brand-card { padding: 16px; }
+      .brand-card__logo { width: 44px; height: 44px; }
+      .link { padding: 14px 16px; }
+      .link__icon { width: 40px; height: 40px; font-size: 20px; }
+      .link__label { font-size: 14.5px; }
+    }
+
+    /* =========================================================
+       Reduced motion
+       ========================================================= */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="route-home">
+
+  <!-- HOME VIEW — umbrella brand identity + grid of sub-brand cards -->
+  <main class="view view--home" id="hubView">
+    <header class="hub__header">
+      <div class="hub__logo">
+        <span class="hub__logo-fallback" id="logoFallback">H</span>
+      </div>
+      <h1 class="hub__name" id="brandName">Harmony &amp; Homes</h1>
+      <p class="hub__tagline" id="brandTagline">A family of home decor and lifestyle brands</p>
+      <div class="hub__divider"><span>Explore</span></div>
+    </header>
+
+    <nav class="brand-grid" id="brandGrid" aria-label="Sub-brands and resources"></nav>
+
+    <footer class="hub__footer">
+      <span class="hub__footer-mark" id="brandFooterMark">Harmony &amp; Homes</span>
+      <div id="brandFooter">© 2026 Harmony &amp; Homes</div>
+    </footer>
+  </main>
+
+  <!-- BRAND VIEW — one sub-brand's identity + their links -->
+  <main class="view view--brand" id="brandView">
+    <div class="brand-view__topbar">
+      <button class="brand-view__back" id="backBtn">
+        <span class="brand-view__back-arrow" aria-hidden="true">‹</span>
+        <span>All brands</span>
+      </button>
+    </div>
+
+    <header class="brand-view__identity" id="brandIdentity"></header>
+
+    <nav class="brand-view__links" id="brandLinks" aria-label="Brand links"></nav>
+
+    <footer class="hub__footer">
+      <span class="hub__footer-mark" id="brandFooterMark2">Harmony &amp; Homes</span>
+      <div id="brandFooter2">© 2026 Harmony &amp; Homes</div>
+    </footer>
+  </main>
+
+  <!-- MATERIALS VIEW — drill-down page listing all materials across brands -->
+  <main class="view view--materials" id="materialsView" data-accent="">
+    <div class="brand-view__topbar">
+      <button class="brand-view__back" id="materialsBackBtn">
+        <span class="brand-view__back-arrow" aria-hidden="true">‹</span>
+        <span>Home</span>
+      </button>
+    </div>
+
+    <header class="brand-view__identity">
+      <div class="brand-view__logo">
+        <span class="brand-view__logo-letter" style="font-size:28px">📚</span>
+      </div>
+      <h1 class="brand-view__name">Materials</h1>
+      <p class="brand-view__tagline" id="materialsTagline">Catalogs, lookbooks &amp; videos across all brands</p>
+    </header>
+
+    <nav class="brand-view__links" id="materialsLinks" aria-label="All materials"></nav>
+
+    <footer class="hub__footer">
+      <span class="hub__footer-mark" id="brandFooterMark3">Harmony &amp; Homes</span>
+      <div id="brandFooter3">© 2026 Harmony &amp; Homes</div>
+    </footer>
+  </main>
+
+  <script>
+    // ===========================================================
+    //  Embedded fallback data — used when data/links.json fails
+    //  (e.g. opening this file directly via file:// without a server)
+    //  Keep this in sync with data/links.json for offline preview.
+    // ===========================================================
+    const FALLBACK_DATA = {
+      brand: {
+        name: "Harmony & Homes",
+        tagline: "A family of home decor and lifestyle brands",
+        logo: "",
+        footer: "© 2026 Harmony & Homes"
+      },
+      brands: [
+        {
+          key: "quadro-decor",
+          name: "Quadro Decor",
+          tagline: "Wall art, mirrors & decor for Filipino homes",
+          accent: "ocean",
+          logo: ""
+        },
+        {
+          key: "brand-b",
+          name: "Brand B",
+          tagline: "Tagline placeholder — replace via the dashboard",
+          accent: "terracotta",
+          logo: ""
+        }
+      ],
+      links: [
+        { id: "lnk-001", brand: "quadro-decor", category: "materials", label: "View Product Catalog",    subtitle: "PDF · Spring 2026",       url: "materials/catalog-spring-2026.pdf",            icon: "📘", highlight: true  },
+        { id: "lnk-002", brand: "quadro-decor", category: "materials", label: "Styling Lookbook",         subtitle: "PDF · 24 pages",          url: "materials/styling-lookbook.pdf",                icon: "📖", highlight: false },
+        { id: "lnk-003", brand: "quadro-decor", category: "materials", label: "Showroom Walkthrough",     subtitle: "Video · 3 min",           url: "https://www.youtube.com/watch?v=YOUR_VIDEO_ID", icon: "🎬", highlight: false },
+        { id: "lnk-004", brand: "quadro-decor", category: "shop",      label: "Product Showcase",         subtitle: "Browse the catalog",       url: "https://your-showcase-url.com",                 icon: "🖼️", highlight: false },
+        { id: "lnk-005", brand: "quadro-decor", category: "shop",      label: "Shop on Lazada",           subtitle: "Free shipping PH",         url: "https://www.lazada.com.ph/shop/quadro-decor",   icon: "🛒", highlight: false },
+        { id: "lnk-006", brand: "quadro-decor", category: "shop",      label: "Shop on Shopee",           subtitle: "",                         url: "https://shopee.ph/quadrodecor",                 icon: "🛍️", highlight: false },
+        { id: "lnk-007", brand: "quadro-decor", category: "social",    label: "Instagram",                 subtitle: "@quadrodecor",            url: "https://instagram.com/quadrodecor",             icon: "📷", highlight: false },
+        { id: "lnk-008", brand: "quadro-decor", category: "social",    label: "Facebook",                  subtitle: "Styling inspiration",     url: "https://facebook.com/quadrodecor",              icon: "👍", highlight: false },
+        { id: "lnk-009", brand: "quadro-decor", category: "social",    label: "TikTok",                    subtitle: "Behind the scenes",       url: "https://tiktok.com/@quadrodecor",               icon: "🎵", highlight: false },
+        { id: "lnk-010", brand: "brand-b",      category: "other",     label: "Contact Us",                subtitle: "Wholesale & partnerships", url: "mailto:hello@harmonynhomes.com",                icon: "✉️", highlight: false }
+      ]
+    };
+
+    // ===========================================================
+    //  Utilities
+    // ===========================================================
+    function escapeHtml(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function isExternal(url) {
+      if (!url) return false;
+      if (url.startsWith("mailto:") || url.startsWith("tel:")) return false;
+      if (url.startsWith("http://") || url.startsWith("https://")) return true;
+      return false;
+    }
+
+    // Extract a YouTube video ID from any standard URL format.
+    // Supports watch, youtu.be short, embed, and shorts URLs.
+    // Returns null if it's not a recognized YouTube link.
+    function getYouTubeId(url) {
+      if (!url) return null;
+      const patterns = [
+        /youtube\.com\/watch\?(?:.*&)?v=([a-zA-Z0-9_-]{11})/i,
+        /youtu\.be\/([a-zA-Z0-9_-]{11})/i,
+        /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/i,
+        /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/i
+      ];
+      for (const re of patterns) {
+        const m = String(url).match(re);
+        if (m) return m[1];
+      }
+      return null;
+    }
+
+    // Build the icon HTML for a link.
+    //   - If the user set an Icon value, use it (emoji or image URL/path).
+    //   - Otherwise, if the link's URL is a YouTube video, auto-show its thumbnail.
+    //   - Otherwise, leave the icon area empty.
+    function renderIcon(link) {
+      // Auto-detect YouTube thumbnail only when Icon field is blank
+      if (link && !link.icon) {
+        const ytId = getYouTubeId(link.url);
+        if (ytId) {
+          // hqdefault.jpg always exists for valid videos (480x360, good quality)
+          const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+          return `<img src="${escapeHtml(thumb)}" alt="" loading="lazy" class="link__icon-img--video" />`;
+        }
+        return "";
+      }
+      const icon = (link && link.icon) || "";
+      // Treat anything that looks like a path/URL as an image
+      if (/^(https?:\/\/|\/|\.\/|images\/|icons\/)/i.test(icon)) {
+        return `<img src="${escapeHtml(icon)}" alt="" loading="lazy" />`;
+      }
+      // Otherwise it's an emoji or short text
+      return escapeHtml(icon);
+    }
+
+    function firstLetter(s) {
+      const t = String(s || "").trim();
+      return t ? t.charAt(0).toUpperCase() : "?";
+    }
+
+    // ===========================================================
+    //  State — populated from data on load
+    // ===========================================================
+    let DATA = null;
+
+    // ===========================================================
+    //  Render: umbrella brand identity (shared by both views)
+    // ===========================================================
+    function renderUmbrella() {
+      const b = DATA.brand || {};
+      const nameEl = document.getElementById("brandName");
+      const tagEl  = document.getElementById("brandTagline");
+      const fbEl   = document.getElementById("logoFallback");
+
+      if (b.name) {
+        nameEl.textContent = b.name;
+        document.title = b.name + " — Links";
+        if (fbEl) fbEl.textContent = firstLetter(b.name);
+      }
+      if (typeof b.tagline === "string") {
+        tagEl.textContent = b.tagline;
+        tagEl.style.display = b.tagline ? "" : "none";
+      }
+      if (b.logo) {
+        const logoEl = document.querySelector("#hubView .hub__logo");
+        if (logoEl) logoEl.innerHTML = `<img src="${escapeHtml(b.logo)}" alt="${escapeHtml(b.name || '')}" />`;
+      }
+      const footerText = b.footer || `© ${new Date().getFullYear()} ${b.name || ""}`;
+      document.getElementById("brandFooter").textContent  = footerText;
+      document.getElementById("brandFooter2").textContent = footerText;
+      document.getElementById("brandFooter3").textContent = footerText;
+      const mark = b.name || "";
+      document.getElementById("brandFooterMark").textContent  = mark;
+      document.getElementById("brandFooterMark2").textContent = mark;
+      document.getElementById("brandFooterMark3").textContent = mark;
+    }
+
+    // ===========================================================
+    //  Render: home view — grid of brand cards
+    // ===========================================================
+    // A link is a "material" if its category is exactly "materials" (case-insensitive).
+    // Materials surface on the dedicated Materials page (reached via the home page's
+    // Materials drill-down button). All other links live inside their brand's page.
+    function isMaterial(link) {
+      return link && String(link.category || "").trim().toLowerCase() === "materials";
+    }
+
+    // Auto-prefix subtitle with the link's brand name when shown alongside
+    // material from other brands — but only if the user hasn't already
+    // prefixed it themselves. Falls back to the umbrella brand name when the
+    // link has no specific sub-brand (i.e. umbrella-wide material).
+    function decorateMaterialSubtitle(link, brandLookup, umbrellaName) {
+      const br = link.brand ? brandLookup.get(link.brand) : null;
+      const subtitle = (link.subtitle || "").trim();
+      let prefixName = "";
+      if (br) prefixName = br.name;
+      else if (!link.brand) prefixName = umbrellaName || "";
+      else prefixName = link.brand;     // brand key set but no match — show key
+      if (!prefixName) return subtitle;
+      const startsWithPrefix = subtitle.toLowerCase().startsWith(prefixName.toLowerCase());
+      if (startsWithPrefix) return subtitle;
+      return subtitle ? `${prefixName} · ${subtitle}` : prefixName;
+    }
+
+    function renderHome() {
+      // ----- Brand grid + Materials card -----
+      const container = document.getElementById("brandGrid");
+      container.innerHTML = "";
+      const brands = Array.isArray(DATA.brands) ? DATA.brands : [];
+
+      if (brands.length === 0) {
+        container.innerHTML = `<div class="hub__empty">No sub-brands defined yet. Add some in the admin dashboard.</div>`;
+      } else {
+        brands.forEach((br) => {
+          if (!br || !br.key || !br.name) return;
+          const accent = br.accent || "";
+          const card = document.createElement("a");
+          card.className = "brand-card";
+          card.href = `#${encodeURIComponent(br.key)}`;
+          card.setAttribute("data-accent", accent);
+          card.setAttribute("data-brand-key", br.key);
+          const logoHtml = br.logo
+            ? `<img src="${escapeHtml(br.logo)}" alt="${escapeHtml(br.name)}" />`
+            : `<span class="brand-card__logo-letter">${firstLetter(br.name)}</span>`;
+          card.innerHTML = `
+            <span class="brand-card__logo">${logoHtml}</span>
+            <span class="brand-card__text">
+              <span class="brand-card__name">${escapeHtml(br.name)}</span>
+              ${br.tagline ? `<span class="brand-card__tagline">${escapeHtml(br.tagline)}</span>` : ""}
+            </span>
+            <span class="brand-card__arrow" aria-hidden="true">›</span>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      // Append Materials card — only if there are any materials defined
+      const materials = (DATA.links || []).filter(isMaterial).filter(l => l && l.label && l.url);
+      if (materials.length > 0) {
+        const count = materials.length;
+        const card = document.createElement("a");
+        card.className = "brand-card brand-card--resources";
+        card.href = "#materials";
+        card.setAttribute("data-accent", "");
+        card.innerHTML = `
+          <span class="brand-card__logo"><span class="brand-card__logo-letter">📚</span></span>
+          <span class="brand-card__text">
+            <span class="brand-card__name">Materials</span>
+            <span class="brand-card__tagline">${count} catalog${count===1?'':'s'}, lookbook${count===1?'':'s'} &amp; video${count===1?'':'s'} across all brands</span>
+          </span>
+          <span class="brand-card__arrow" aria-hidden="true">›</span>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    // ===========================================================
+    //  Render: materials view — all material links across brands
+    // ===========================================================
+    function renderMaterialsPage() {
+      const linksEl = document.getElementById("materialsLinks");
+      linksEl.innerHTML = "";
+
+      const materials = (DATA.links || []).filter(isMaterial).filter(l => l && l.label && l.url);
+      if (materials.length === 0) {
+        linksEl.innerHTML = `<div class="hub__empty">No materials available yet. Add catalogs, lookbooks, or videos via the admin dashboard with category = materials.</div>`;
+        return;
+      }
+
+      const brands = Array.isArray(DATA.brands) ? DATA.brands : [];
+      const brandLookup = new Map();
+      brands.forEach(b => { if (b && b.key) brandLookup.set(b.key, b); });
+      const umbrellaName = (DATA.brand && DATA.brand.name) || "";
+
+      materials.forEach((link) => {
+        const external = isExternal(link.url);
+        const a = document.createElement("a");
+        a.className = "link" + (link.highlight ? " link--highlight" : "");
+        a.href = link.url;
+        if (external) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+        const subtitle = decorateMaterialSubtitle(link, brandLookup, umbrellaName);
+        a.innerHTML = `
+          <span class="link__icon" aria-hidden="true">${renderIcon(link)}</span>
+          <span class="link__text">
+            <span class="link__label">${escapeHtml(link.label)}</span>
+            ${subtitle ? `<span class="link__subtitle">${escapeHtml(subtitle)}</span>` : ""}
+          </span>
+          <span class="link__arrow" aria-hidden="true">→</span>
+        `;
+        linksEl.appendChild(a);
+      });
+
+      document.title = `Materials${umbrellaName ? ' · ' + umbrellaName : ''} — Links`;
+    }
+
+    // ===========================================================
+    //  Render: brand view — one brand's identity + their links
+    // ===========================================================
+    function renderBrandPage(brandKey) {
+      const br = (DATA.brands || []).find((b) => b && b.key === brandKey);
+      const idEl = document.getElementById("brandIdentity");
+      const linksEl = document.getElementById("brandLinks");
+      const viewEl = document.getElementById("brandView");
+
+      if (!br) {
+        // Unknown brand key — fall back to home
+        goHome(true);
+        return;
+      }
+
+      // Apply accent to the entire brand view via data attribute
+      viewEl.setAttribute("data-accent", br.accent || "");
+
+      // Brand identity block
+      const logoHtml = br.logo
+        ? `<img src="${escapeHtml(br.logo)}" alt="${escapeHtml(br.name)}" />`
+        : `<span class="brand-view__logo-letter">${firstLetter(br.name)}</span>`;
+      idEl.innerHTML = `
+        <div class="brand-view__logo">${logoHtml}</div>
+        <h1 class="brand-view__name">${escapeHtml(br.name)}</h1>
+        ${br.tagline ? `<p class="brand-view__tagline">${escapeHtml(br.tagline)}</p>` : ""}
+      `;
+
+      // Filter to this brand AND exclude materials (those live on the home page)
+      const brandLinks = (DATA.links || []).filter(
+        (l) => l && l.brand === brandKey && l.label && l.url && !isMaterial(l)
+      );
+      linksEl.innerHTML = "";
+
+      if (brandLinks.length === 0) {
+        linksEl.innerHTML = `<div class="hub__empty">No links for this brand yet. Materials, if any, appear on the home page.</div>`;
+        return;
+      }
+
+      brandLinks.forEach((link) => {
+        const external = isExternal(link.url);
+        const a = document.createElement("a");
+        a.className = "link" + (link.highlight ? " link--highlight" : "");
+        a.href = link.url;
+        if (external) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+        a.innerHTML = `
+          <span class="link__icon" aria-hidden="true">${renderIcon(link)}</span>
+          <span class="link__text">
+            <span class="link__label">${escapeHtml(link.label)}</span>
+            ${link.subtitle ? `<span class="link__subtitle">${escapeHtml(link.subtitle)}</span>` : ""}
+          </span>
+          <span class="link__arrow" aria-hidden="true">→</span>
+        `;
+        linksEl.appendChild(a);
+      });
+
+      // Update page title and meta to the brand's identity
+      const umbrella = (DATA.brand && DATA.brand.name) || "";
+      document.title = `${br.name}${umbrella ? " · " + umbrella : ""} — Links`;
+    }
+
+    // ===========================================================
+    //  Routing — hash-based (e.g. #quadro-decor)
+    // ===========================================================
+    function goHome(replace) {
+      if (replace) {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      } else {
+        // Clearing the hash with location.hash="" leaves a stray '#' — use replaceState if needed
+        if (window.location.hash) {
+          history.pushState(null, "", window.location.pathname + window.location.search);
+        }
+      }
+      applyRoute();
+    }
+
+    function applyRoute() {
+      const hash = decodeURIComponent((window.location.hash || "").replace(/^#/, "")).trim();
+      if (!hash) {
+        document.body.classList.remove("route-brand", "route-materials");
+        document.body.classList.add("route-home");
+        document.getElementById("brandView").setAttribute("data-accent", "");
+        const umbrella = (DATA && DATA.brand && DATA.brand.name) || "";
+        document.title = umbrella ? `${umbrella} — Links` : "Links";
+        window.scrollTo({ top: 0, behavior: "instant" });
+        return;
+      }
+      if (hash === "materials") {
+        renderMaterialsPage();
+        document.body.classList.remove("route-home", "route-brand");
+        document.body.classList.add("route-materials");
+        window.scrollTo({ top: 0, behavior: "instant" });
+        return;
+      }
+      renderBrandPage(hash);
+      document.body.classList.remove("route-home", "route-materials");
+      document.body.classList.add("route-brand");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    document.getElementById("backBtn").addEventListener("click", () => goHome(false));
+    document.getElementById("materialsBackBtn").addEventListener("click", () => goHome(false));
+    window.addEventListener("hashchange", applyRoute);
+    window.addEventListener("popstate", applyRoute);
+
+    // ===========================================================
+    //  Load data — try JSON file first, fall back to embedded
+    // ===========================================================
+    async function loadData() {
+      try {
+        const res = await fetch("data/links.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("Bad response: " + res.status);
+        DATA = await res.json();
+      } catch (err) {
+        console.info("Using embedded fallback data:", err.message);
+        DATA = FALLBACK_DATA;
+      }
+      try {
+        renderUmbrella();
+        renderHome();
+        applyRoute();
+      } catch (e) {
+        console.error("Render error:", e);
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>

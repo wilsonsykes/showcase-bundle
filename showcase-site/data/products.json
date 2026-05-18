@@ -1,0 +1,831 @@
+[
+  {
+    "sku": "125099-12",
+    "name": "Graceful Koi Fish",
+    "cat": "3d",
+    "size": "70.5 x 6 x 110.5 cm",
+    "material": "Copper Plate",
+    "price": "PHP 29,999.00",
+    "img": "125099-12.jpg"
+  },
+  {
+    "sku": "125029-12",
+    "name": "Serenade of the Koi",
+    "cat": "3d",
+    "size": "110 x 6 x 70 cm",
+    "material": "Copper",
+    "price": "PHP 29,999.00",
+    "img": "125029-12.jpg"
+  },
+  {
+    "sku": "125057-20",
+    "name": "Koi Embrace",
+    "cat": "3d",
+    "size": "160 x 5 x 80 cm",
+    "material": "Wood",
+    "price": "PHP 17,999.00",
+    "img": "125057-20.jpg"
+  },
+  {
+    "sku": "124176-10",
+    "name": "Leaves",
+    "cat": "3d",
+    "size": "57 x 4 x 94 cm",
+    "material": "Metal",
+    "price": "PHP 4,999.00",
+    "img": "124176-10.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "125092-17",
+    "name": "Resin Last Supper",
+    "cat": "3d",
+    "size": "149 x 6 x 72 cm",
+    "material": "Resin",
+    "price": "PHP 6,999.00",
+    "img": "125092-17.jpg"
+  },
+  {
+    "sku": "124133-5",
+    "name": "Last Supper",
+    "cat": "3d",
+    "size": "60.5 x 6 x 43 cm",
+    "material": "Resin",
+    "price": "PHP 2,799.00",
+    "img": "124133-5.jpg"
+  },
+  {
+    "sku": "1325242-10",
+    "name": "Golden Bloom Series",
+    "cat": "3d",
+    "size": "80 x  3.5 x  80 cm",
+    "material": "Canvas",
+    "price": "PHP 4,999.00",
+    "img": "1325242-10.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "1325237-10",
+    "name": "Golden Bloom Series",
+    "cat": "3d",
+    "size": "80 x  3.5 x  80 cm",
+    "material": "Canvas",
+    "price": "PHP 4,999.00",
+    "img": "1325237-10.jpg"
+  },
+  {
+    "sku": "124112-4",
+    "name": "Geometric",
+    "cat": "3d",
+    "size": "49.5 x 4 x 49.5 cm",
+    "material": "Leatherette",
+    "price": "PHP 2,299.00",
+    "img": "124112-4.jpg"
+  },
+  {
+    "sku": "124177-6",
+    "name": "Landscape",
+    "cat": "3d",
+    "size": "60 x 4 x 60 cm",
+    "material": "Leatherette",
+    "price": "PHP 3,999.00",
+    "img": "124177-6.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "M21022-10",
+    "name": "Decorative Mirror Crysteline",
+    "cat": "mirror",
+    "size": "90 x 4 x 70 cm",
+    "material": "Decorative Mirror",
+    "price": "PHP 10,999.00",
+    "img": "M21022-10.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "824062-6",
+    "name": "Decorative Mirror",
+    "cat": "mirror",
+    "size": "61 x 2.5 x 61 cm",
+    "material": "Wood",
+    "price": "PHP 2,299.00",
+    "img": "824062-6.jpg"
+  },
+  {
+    "sku": "824061-6",
+    "name": "Decorative Mirror",
+    "cat": "mirror",
+    "size": "59.5 x 2 x 59.5 cm",
+    "material": "Wood",
+    "price": "PHP 2,299.00",
+    "img": "824061-6.jpg"
+  },
+  {
+    "sku": "M22005-6",
+    "name": "Plastic Round Mirror - Heru",
+    "cat": "mirror",
+    "size": "60 x 7 x 60 cm",
+    "material": "Plastic",
+    "price": "PHP 1,999.00",
+    "img": "M22005-6.jpg"
+  },
+  {
+    "sku": "M22003-6",
+    "name": "Plastic Round Mirror - Zenna",
+    "cat": "mirror",
+    "size": "59 x 6 x 59 cm",
+    "material": "Plastic",
+    "price": "PHP 1,999.00",
+    "img": "M22003-6.jpg"
+  },
+  {
+    "sku": "M22001-5",
+    "name": "Plastic Round Mirror - Tamara",
+    "cat": "mirror",
+    "size": "51 x 5 x 51 cm",
+    "material": "Plastic",
+    "price": "PHP 999.00",
+    "img": "M22001-5.jpg"
+  },
+  {
+    "sku": "825005-9",
+    "name": "Celestial Mirror",
+    "cat": "mirror",
+    "size": "62 x  3 x  91 cm",
+    "material": "Plastic",
+    "price": "PHP 3,999.00",
+    "img": "825005-9.jpg"
+  },
+  {
+    "sku": "825004-9",
+    "name": "Celestial Mirror",
+    "cat": "mirror",
+    "size": "76 x  3 x  76 cm",
+    "material": "Plastic",
+    "price": "PHP 3,999.00",
+    "img": "825004-9.jpg"
+  },
+  {
+    "sku": "1324254-17",
+    "name": "Last Supper",
+    "cat": "wallart",
+    "size": "144 x 5 x 76 cm",
+    "material": "Canvas",
+    "price": "PHP 12,999.00",
+    "img": "1324254-17.jpg"
+  },
+  {
+    "sku": "1325177-15",
+    "name": "Tree of Prosperity",
+    "cat": "wallart",
+    "size": "70.5 x 3.5 x 141 cm",
+    "material": "Oil Painting",
+    "price": "PHP 6,999.00",
+    "img": "1325177-15.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "1325178-12",
+    "name": "Whispers of the Wind",
+    "cat": "wallart",
+    "size": "60.5 x 3.5 x  120.5",
+    "material": "Oil Painting",
+    "price": "PHP 4,999.00",
+    "img": "1325178-12.jpg"
+  },
+  {
+    "sku": "1325053-12",
+    "name": "Abstract Cubist-Style Portraits",
+    "cat": "wallart",
+    "size": "73 x  2 x  103 cm",
+    "material": "Print on Glass",
+    "price": "PHP 3,999.00",
+    "img": "1325053-12.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "1325041-12",
+    "name": "Tulips",
+    "cat": "wallart",
+    "size": "73 x  2 x  103 cm",
+    "material": "Print on Glass",
+    "price": "PHP 3,999.00",
+    "img": "1325041-12.jpg"
+  },
+  {
+    "sku": "1325052-12",
+    "name": "Abstract Cubist-Style Portraits",
+    "cat": "wallart",
+    "size": "73 x  2 x  103 cm",
+    "material": "Print on Glass",
+    "price": "PHP 3,999.00",
+    "img": "1325052-12.jpg"
+  },
+  {
+    "sku": "1325102-8",
+    "name": "Seaside Serenity",
+    "cat": "wallart",
+    "size": "58 x  4 x  78.5 cm",
+    "material": "Canvas",
+    "price": "PHP 3,299.00",
+    "img": "1325102-8.jpg"
+  },
+  {
+    "sku": "1325211-18",
+    "name": "Contour Motion",
+    "cat": "wallart",
+    "size": "128.5 x  3 x  88.5 cm",
+    "material": "Canvas",
+    "price": "PHP 7,999.00",
+    "img": "1325211-18.jpg"
+  },
+  {
+    "sku": "1325007-12",
+    "name": "Abstract",
+    "cat": "wallart",
+    "size": "73 x 2 x 103 cm",
+    "material": "Print on Glass",
+    "price": "PHP 3,999.00",
+    "img": "1325007-12.jpg"
+  },
+  {
+    "sku": "1325129-10",
+    "name": "Whispers of the Sea",
+    "cat": "wallart",
+    "size": "78.5 x  5 x  78.5 cm",
+    "material": "Leatherette",
+    "price": "PHP 4,999.00",
+    "img": "1325129-10.jpg"
+  },
+  {
+    "sku": "1325128-10",
+    "name": "GeoSplice",
+    "cat": "wallart",
+    "size": "78.5 x  5 x  78.5 cm",
+    "material": "Leatherette",
+    "price": "PHP 4,999.00",
+    "img": "1325128-10.jpg"
+  },
+  {
+    "sku": "1325125-10",
+    "name": "Skylines & Dreams",
+    "cat": "wallart",
+    "size": "78.5 x  5 x  78.5 cm",
+    "material": "Leatherette",
+    "price": "PHP 4,999.00",
+    "img": "1325125-10.jpg"
+  },
+  {
+    "sku": "1124042-1",
+    "name": "Swan Copper Natural Blue White Crystal Marble",
+    "cat": "tabledecor",
+    "size": "8 x 15 x 26 cm",
+    "material": "Copper Crystal",
+    "price": "PHP 6,999.00",
+    "img": "1124042-1.jpg"
+  },
+  {
+    "sku": "1124040-1",
+    "name": "Butterfly Agate Copper K9 Crystal",
+    "cat": "tabledecor",
+    "size": "6 x 8 x 34 cm",
+    "material": "Copper Crystal",
+    "price": "PHP 4,999.00",
+    "img": "1124040-1.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "1124046-1",
+    "name": "Copper Natural Greenstone Marble",
+    "cat": "tabledecor",
+    "size": "8 x 9 x 20 cm",
+    "material": "Crystal",
+    "price": "PHP 4,999.00",
+    "img": "1124046-1.jpg"
+  },
+  {
+    "sku": "925013-2",
+    "name": "Round Accent Wooden Tray",
+    "cat": "tabledecor",
+    "size": "30 x  30 x  11 cm",
+    "material": "Wood",
+    "price": "PHP 1,999.00",
+    "img": "925013-2.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "925012-2",
+    "name": "Square Accent Wooden Tray",
+    "cat": "tabledecor",
+    "size": "40 x  30 x  6.5 cm",
+    "material": "Wood",
+    "price": "PHP 1,799.00",
+    "img": "925012-2.jpg"
+  },
+  {
+    "sku": "924091-3",
+    "name": "Ginkgo Accent Metal Tray",
+    "cat": "tabledecor",
+    "size": "46 x 35.5 x 4.5 cm",
+    "material": "Metal",
+    "price": "PHP 1,299.00",
+    "img": "924091-3.jpg"
+  },
+  {
+    "sku": "1125053-2",
+    "name": "Climb of Unity",
+    "cat": "tabledecor",
+    "size": "22.4 x  13.4 x  32.6 cm",
+    "material": "Resin",
+    "price": "PHP 2,999.00",
+    "img": "1125053-2.jpg"
+  },
+  {
+    "sku": "1125048-1",
+    "name": "Chill Champ",
+    "cat": "tabledecor",
+    "size": "28.5 x  15.5 x  20.7 cm",
+    "material": "Resin",
+    "price": "PHP 2,999.00",
+    "img": "1125048-1.jpg"
+  },
+  {
+    "sku": "1124068-1",
+    "name": "Bulldog with Tray",
+    "cat": "tabledecor",
+    "size": "25 x 22 x 32 cm",
+    "material": "Resin",
+    "price": "PHP 2,999.00",
+    "img": "1124068-1.jpg"
+  },
+  {
+    "sku": "1125022-1",
+    "name": "Prosperity Fruit Tray",
+    "cat": "tabledecor",
+    "size": "22.5 x  22.5 x  22.5 cm",
+    "material": "Glass",
+    "price": "PHP 1,999.00",
+    "img": "1125022-1.jpg"
+  },
+  {
+    "sku": "1125031-1",
+    "name": "Fruit Tray",
+    "cat": "tabledecor",
+    "size": "30 x  30 x  13.5 cm",
+    "material": "Metal Wood",
+    "price": "PHP 1,499.00",
+    "img": "1125031-1.jpg"
+  },
+  {
+    "sku": "925019-1",
+    "name": "Metal Vase",
+    "cat": "tabledecor",
+    "size": "25 x  28.5 x  16 cm",
+    "material": "Metal",
+    "price": "PHP 799.00",
+    "img": "925019-1.jpg"
+  },
+  {
+    "sku": "1125014-1",
+    "name": "Muse & Apollo Bookends",
+    "cat": "tabledecor",
+    "size": "22 x  8 x  16 cm",
+    "material": "Copper Plate",
+    "price": "PHP 2,299.00",
+    "img": "1125014-1.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "1125011-1",
+    "name": "Liberty in White",
+    "cat": "tabledecor",
+    "size": "7 x  8 x  30 cm",
+    "material": "Copper Plate",
+    "price": "PHP 1,299.00",
+    "img": "1125011-1.jpg"
+  },
+  {
+    "sku": "1124079-1",
+    "name": "Sailboat",
+    "cat": "tabledecor",
+    "size": "17.5 x 5.5 x 21 cm",
+    "material": "Resin",
+    "price": "PHP 999.00",
+    "img": "1124079-1.jpg"
+  },
+  {
+    "sku": "1224104-1",
+    "name": "Decorative Vase Small",
+    "cat": "tabledecor",
+    "size": "12 x 12 x 33 cm",
+    "material": "Terracotta",
+    "price": "PHP 1,299.00",
+    "img": "1224104-1.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "1224029-1",
+    "name": "Decorative Vase",
+    "cat": "tabledecor",
+    "size": "11.5 x 11.5 x 26 cm",
+    "material": "Ceramic",
+    "price": "PHP 999.00",
+    "img": "1224029-1.jpg"
+  },
+  {
+    "sku": "524014-6",
+    "name": "Vintage Wall Clock",
+    "cat": "clock",
+    "size": "60 x 6 x 60 cm",
+    "material": "Wood",
+    "price": "PHP 4,999.00",
+    "img": "524014-6.jpg"
+  },
+  {
+    "sku": "524012-6",
+    "name": "Vintage Wall Clock",
+    "cat": "clock",
+    "size": "60 x 6 x 60 cm",
+    "material": "Metal",
+    "price": "PHP 4,999.00",
+    "img": "524012-6.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "524011-6",
+    "name": "Vintage Wall Clock",
+    "cat": "clock",
+    "size": "60 x 6 x 60 cm",
+    "material": "Metal",
+    "price": "PHP 4,999.00",
+    "img": "524011-6.jpg"
+  },
+  {
+    "sku": "524016-3",
+    "name": "Vintage Wall Clock",
+    "cat": "clock",
+    "size": "42 x 7 x 42 cm",
+    "material": "Metal",
+    "price": "PHP 3,999.00",
+    "img": "524016-3.jpg"
+  },
+  {
+    "sku": "524015-3",
+    "name": "Vintage Wall Clock",
+    "cat": "clock",
+    "size": "43 x 7.5 x 43 cm",
+    "material": "Metal",
+    "price": "PHP 3,999.00",
+    "img": "524015-3.jpg",
+    "featured": "Yes"
+  },
+  {
+    "sku": "524013-4",
+    "name": "Vintage Wall Clock",
+    "cat": "clock",
+    "size": "40 x 6 x 55 cm",
+    "material": "Wood",
+    "price": "PHP 2,999.00",
+    "img": "524013-4.jpg"
+  },
+  {
+    "sku": "msi-psw",
+    "name": "Polo Shirt White",
+    "cat": "apparel",
+    "description": "Classic white polo shirt ideal for corporate uniforms, school activities, events, and everyday wear. Designed for both men and ladies with a lightweight and comfortable feel, offering a clean and versatile appearance suitable for various settings.",
+    "size": "XS-3XL",
+    "price": "PHP 150.00 - 185.00",
+    "img": "msi-psw.jpg"
+  },
+  {
+    "sku": "msi-psc",
+    "name": "Polo Shirt Colored",
+    "cat": "apparel",
+    "description": "Comfortable everyday polo shirt designed for both men and ladies, suitable for uniforms, company wear, events, and casual use. Made for all-day comfort with a clean and professional look, available in a variety of colored fabric options and multiple size ranges for a better fit.",
+    "size": "XS-3XL",
+    "price": "PHP 180.00 - 225.00",
+    "img": "msi-psc.jpg"
+  },
+  {
+    "sku": "msi-lsp",
+    "name": "Long Sleeve Plain F/S",
+    "cat": "apparel",
+    "description": "Lightweight and comfortable long sleeve shirt ideal for workwear, outdoor activities, uniforms, and everyday protection. Designed for practical daily use while maintaining a clean and professional appearance.",
+    "size": "S-XL",
+    "price": "PHP 65.00",
+    "img": "msi-lsp.jpg"
+  },
+  {
+    "sku": "msi-lsr",
+    "name": "Long Sleeve w/ Reflector",
+    "cat": "apparel",
+    "description": "Functional long sleeve shirt with reflective detailing for added visibility and safety in workplaces, outdoor activities, and field operations. Ideal for construction, logistics, warehouse, and utility use while providing comfort for extended wear.",
+    "size": "S-XL",
+    "price": "PHP 110.00",
+    "img": "msi-lsr.jpg"
+  },
+  {
+    "sku": "brd-50",
+    "name": "Reed Diffuser 50ml",
+    "cat": "fragrance",
+    "description": "A compact home fragrance diffuser ideal for desks, bedside tables, powder rooms, and small spaces. Available in elegant Round Black (RB) and Round Gold (RG) packaging for a modern decorative touch while continuously diffusing fragrance throughout the room.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "50ml",
+    "price": "PHP 349.00",
+    "img": "brd-50.png"
+  },
+  {
+    "sku": "brd-140",
+    "name": "Reed Diffuser 140ml",
+    "cat": "fragrance",
+    "description": "A decorative reed diffuser designed for living rooms, bedrooms, offices, and reception spaces. Available in Round Gold (RG) and Square Amber Glass (SAG), packaging that complements both modern and classic interiors while providing long-lasting fragrance diffusion.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "140ml",
+    "price": "PHP 689.00",
+    "img": "brd-140.png"
+  },
+  {
+    "sku": "brd-150",
+    "name": "Reed Diffuser 150ml",
+    "cat": "fragrance",
+    "description": "A decorative reed diffuser designed for living rooms, bedrooms, offices, and reception spaces. Available in Square Silver (SS) packaging that complements both modern and classic interiors while providing long-lasting fragrance diffusion.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "150ml",
+    "price": "PHP 689.00",
+    "img": "brd-150.png"
+  },
+  {
+    "sku": "brs-250",
+    "name": "Room Spray 250ml",
+    "cat": "fragrance",
+    "description": "Instantly refresh and revitalize any room with this versatile room spray, ideal for bedrooms, living rooms, offices, and bathrooms. Available in Pump Spray Amber PET (PSAP), Pump Spray Clear PET (PSCP), Pump Spray Cobalt Blue PET (PSCBP), and Trigger Spray Amber PET (TSAP) packaging for both functional and stylish everyday use.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "250ml",
+    "price": "PHP 399.00",
+    "img": "brs-250.png"
+  },
+  {
+    "sku": "brs-300",
+    "name": "Room Spray 300ml",
+    "cat": "fragrance",
+    "description": "A larger-capacity room spray formulated to quickly eliminate odors and create a welcoming atmosphere in homes, offices, and commercial spaces. Available in Trigger Spray Amber PET (TSAP), Trigger Spray Clear PET (TSCP), and Trigger Spray Cobalt Blue PET (TSCBP) packaging for easy and efficient application.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "300ml",
+    "price": "PHP 459.00",
+    "img": "brs-300.png"
+  },
+  {
+    "sku": "bsc-2",
+    "name": "Soy Candle 2oz",
+    "cat": "fragrance",
+    "description": "A compact soy candle perfect for small spaces, gifting, giveaways, or travel use. Available in Round Black Tin Can (RBTC) packaging, offering a warm and cozy fragrance experience with a clean and relaxing burn.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "2oz",
+    "price": "PHP 189.00",
+    "img": "bsc-2.png"
+  },
+  {
+    "sku": "bsc-4",
+    "name": "Soy Candle 4oz",
+    "cat": "fragrance",
+    "description": "A stylish medium-sized soy candle designed to create a relaxing and inviting atmosphere in bedrooms, living rooms, and workspaces. Available in Clear Glass Jar with Lid (CGJL) and Amber Glass with Lid (AGL) packaging for an elevated home fragrance experience.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "4oz",
+    "price": "PHP 349.00",
+    "img": "bsc-4.png"
+  },
+  {
+    "sku": "bsc-6",
+    "name": "Soy Candle 6oz",
+    "cat": "fragrance",
+    "description": "A premium large soy candle ideal for creating a long-lasting aromatic ambiance in larger rooms and entertaining spaces. Available in Clear Glass Vessel (CGV) and Amber Glass with Lid (AGL) packaging that blends beautifully with modern home d�cor.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "6oz",
+    "price": "PHP 529.00",
+    "img": "bsc-6.png"
+  },
+  {
+    "sku": "bwsol-20",
+    "name": "Water Soluble 20ml",
+    "cat": "fragrance",
+    "description": "Concentrated water-soluble fragrance oils specially formulated for humidifiers, diffusers, and aroma burners. Available in Amber Glass (AG packaging for safe and convenient everyday aromatherapy use.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "20ml",
+    "price": "PHP 119.00",
+    "img": "bwsol-20.png"
+  },
+  {
+    "sku": "bwsol-50",
+    "name": "Water Soluble 50ml",
+    "cat": "fragrance",
+    "description": "Concentrated water-soluble fragrance oils specially formulated for humidifiers, diffusers, and aroma burners. Available in Amber PET (AP) and Cobalt Blue PET (CBP) packaging for safe and convenient everyday aromatherapy use.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "50ml",
+    "price": "PHP 179.00",
+    "img": "bwsol-50.png"
+  },
+  {
+    "sku": "bwsol-100",
+    "name": "Water Soluble 100ml",
+    "cat": "fragrance",
+    "description": "A larger-capacity water-soluble fragrance oil ideal for regular diffuser use in homes, offices, and wellness spaces. Packaged in durable Amber PET (AP) bottles for practical and easy dispensing while providing consistent aromatic performance.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "100ml",
+    "price": "PHP 349.00",
+    "img": "bwsol-100.png"
+  },
+  {
+    "sku": "brls-1l",
+    "name": "Room & Linen Spray 1L",
+    "cat": "fragrance",
+    "description": "A multi-purpose fragrance spray designed for linens, curtains, upholstery, bedrooms, and living spaces. Formulated to instantly freshen fabrics and interiors while leaving a clean, long-lasting scent throughout the room.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "1L",
+    "price": "PHP 650.00",
+    "img": "brls-1l.png"
+  },
+  {
+    "sku": "brls-1g",
+    "name": "Room & Linen Spray 1gal",
+    "cat": "fragrance",
+    "description": "A multi-purpose fragrance spray designed for linens, curtains, upholstery, bedrooms, and living spaces. Formulated to instantly freshen fabrics and interiors while leaving a clean, long-lasting scent throughout the room.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "1gal",
+    "price": "PHP 2,000.00",
+    "img": "brls-1g.png"
+  },
+  {
+    "sku": "bsmo-1l",
+    "name": "Scenting Machine Oil 1L",
+    "cat": "fragrance",
+    "description": "Professional-grade fragrance oil specially formulated for scenting machines and HVAC scent diffusion systems. Designed for consistent aroma performance and long-lasting fragrance coverage in residential, commercial, and hospitality environments.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "1L",
+    "price": "PHP 3,500.00",
+    "img": "bsmo-1l.png"
+  },
+  {
+    "sku": "bsmo-1g",
+    "name": "Scenting Machine Oil 1gal",
+    "cat": "fragrance",
+    "description": "Professional-grade fragrance oil specially formulated for scenting machines and HVAC scent diffusion systems. Designed for consistent aroma performance and long-lasting fragrance coverage in residential, commercial, and hospitality environments.\n\nAvailable Scents: Fresh Bamboo, Shangri-La, Solair, Lavender, Peppermint, Eucalyptus, White Tea, Warm Cotton, Balsam & Spruce, Citonella, Green Tea, Lemongrass.",
+    "size": "1gal",
+    "price": "PHP 12,950.00",
+    "img": "bsmo-1g.png"
+  },
+  {
+    "sku": "1423001-1",
+    "name": "AR-50 Max",
+    "cat": "scentmachine",
+    "description": "Compact and portable scenting machine designed for small enclosed spaces such as elevators and bathrooms. Features a rechargeable battery and patented atomizer technology for quiet and efficient fragrance diffusion, covering up to 50sqm with a 100ml capacity.",
+    "size": "150 x 150 x 60 mm",
+    "price": "PHP 4,999.00",
+    "img": "1423001-1.png"
+  },
+  {
+    "sku": "1423002-2",
+    "name": "IB-900",
+    "cat": "scentmachine",
+    "description": "A powerful commercial scenting machine ideal for small lobbies, landing areas, living rooms, and common spaces. Equipped with Bluetooth and WiFi connectivity, patented atomizer technology, and a large 1000ml capacity, it delivers consistent fragrance coverage for areas up to 600sqm.",
+    "size": "160 x 160 x 540 mm",
+    "price": "PHP 19,999.00",
+    "img": "1423002-2.png"
+  },
+  {
+    "sku": "1423003-1",
+    "name": "SM-200",
+    "cat": "scentmachine",
+    "description": "Discreet ceiling-mounted scenting machine perfect for VIP rooms and private spaces. Features Bluetooth and WiFi control, quiet operation, and patented atomizer technology, offering efficient fragrance diffusion for up to 200sqm with a 200ml capacity.",
+    "size": "136 x 136 x 119 mm",
+    "price": "PHP 8,999.00",
+    "img": "1423003-1.png"
+  },
+  {
+    "sku": "1423004-1",
+    "name": "AR-200",
+    "cat": "scentmachine",
+    "description": "Elegant wall-mounted scenting machine designed for large bathrooms, VIP rooms, and private rooms. With Bluetooth and WiFi connectivity, visible oil-level monitoring, and patented atomizer technology, it provides quiet and reliable scent coverage for up to 200sqm.",
+    "size": "65 x 135 x 190 mm",
+    "price": "PHP 4,999.00",
+    "img": "1423004-1.png"
+  },
+  {
+    "sku": "1423005-1",
+    "name": "AR-150 Black",
+    "cat": "scentmachine",
+    "description": "Compact and modern scenting machine ideal for display tables, elevator landings, and small commercial spaces. With Bluetooth and WiFi connectivity and patented atomizer technology, it delivers efficient and quiet fragrance diffusion for up to 150sqm.",
+    "size": "160 x 160 x 160 mm",
+    "price": "PHP 15,999.00",
+    "img": "1423005-1.png"
+  },
+  {
+    "sku": "1423006-1",
+    "name": "AR-150 Rose Gold",
+    "cat": "scentmachine",
+    "description": "Stylish and compact scenting machine suitable for elevator landings, display tables, and small commercial areas. Features Bluetooth and WiFi connectivity with patented atomizer technology, delivering quiet fragrance diffusion for spaces up to 150sqm.",
+    "size": "160 x 160 x 160 mm",
+    "price": "PHP 15,999.00",
+    "img": "1423006-1.png"
+  },
+  {
+    "sku": "1425001-1",
+    "name": "SM-10000",
+    "cat": "scentmachine",
+    "description": "High-capacity HVAC scenting system engineered for large commercial environments such as hotel lobbies, function rooms, and high-ceiling areas. Powered by Bluetooth and WiFi controls with patented atomizer technology, it efficiently scents spaces up to 5000sqm with a 2000ml capacity.",
+    "size": "360 x 206 x 180 mm",
+    "price": "PHP 32,999.00",
+    "img": "1425001-1.png"
+  },
+  {
+    "sku": "1424001-1",
+    "name": "SM-3000",
+    "cat": "scentmachine",
+    "description": "Commercial-grade scenting machine ideal for large lobbies, living rooms, common areas, and indoor landing spaces. Equipped with Bluetooth and WiFi connectivity, quiet operation, and patented atomizer technology, it provides wide fragrance coverage for areas up to 2000sqm.",
+    "size": "150 x 150 x 150 mm",
+    "price": "PHP 15,999.00",
+    "img": "1424001-1.png"
+  },
+  {
+    "sku": "1424002-1",
+    "name": "AR-200",
+    "cat": "scentmachine",
+    "description": "Modern black-finish scenting machine designed for premium bathrooms, VIP rooms, and private areas. Features Bluetooth and WiFi connectivity, visible oil-level monitoring, and quiet patented atomizer technology for effective scent coverage up to 200sqm.",
+    "size": "65 x 135 x 190 mm",
+    "price": "PHP 4,999.00",
+    "img": "1424002-1.png"
+  },
+  {
+    "sku": "xds-stc",
+    "name": "Small Table Centerpiece",
+    "cat": "xds",
+    "description": "Compact Christmas table centerpiece ideal for reception desks, dining tables, concierge counters and cafe settings. Styled with festive ornaments, florals and seasonal accents to add an elegant holiday touch without occupying too much space.",
+    "img": "xds-stc.png"
+  },
+  {
+    "sku": "xds-mtc",
+    "name": "Medium Table Centerpiece",
+    "cat": "xds",
+    "description": "Versatile holiday centerpiece designed for dining tables, lobby consoles, meeting rooms and common areas. Creates a warm and festive atmosphere with balanced seasonal styling suitable for hotels, condominiums, restaurants and offices.",
+    "img": "xds-mtc.png"
+  },
+  {
+    "sku": "xds-ttc",
+    "name": "Tall Table Centerpiece",
+    "cat": "xds",
+    "description": "Statement Christmas centerpiece designed for large dining tables, hotel buffets, registration counters and event spaces. Features elevated styling that adds visual impact while maintaining an elegant holiday presentation.",
+    "img": "xds-ttc.png"
+  },
+  {
+    "sku": "xds-ltc",
+    "name": "Long and Low Table Centerpiece",
+    "cat": "xds",
+    "description": "A horizontally styled centerpiece perfect for banquet tables, conference tables and long dining setups. Designed to provide festive elegance without blocking guest interaction or sightlines across the table.",
+    "img": "xds-ltc.png"
+  },
+  {
+    "sku": "xds-ga",
+    "name": "Garland Arrangement",
+    "cat": "xds",
+    "description": "Decorative Christmas garland arrangement ideal for stair railings, entrances, counters, mantels and hallway accents. Styled with festive foliage, ornaments, ribbons and lighting options to enhance commercial and residential holiday spaces.",
+    "size": "9ft",
+    "img": "xds-ga.png"
+  },
+  {
+    "sku": "xds-wa",
+    "name": "Wreath Arrangement",
+    "cat": "xds",
+    "description": "Classic Christmas wreath arrangement suitable for doors, walls, lobbies, storefronts and feature displays. Available in various sizes and styled with coordinated ornaments, florals, ribbons, and festive accents for a welcoming holiday presentation.",
+    "size": "30in - 45in",
+    "img": "xds-wa.png"
+  },
+  {
+    "sku": "xds-aga",
+    "name": "Arch Garland Arrangement",
+    "cat": "xds",
+    "description": "Custom Christmas arch garland arrangement designed for entrances, stage setups, photo areas and mall or hotel walkways. Creates a festive focal point with layered greenery, ornaments, ribbons and optional lighting elements.",
+    "img": "xds-aga.png"
+  },
+  {
+    "sku": "xds-ct",
+    "name": "Cone Tree",
+    "cat": "xds",
+    "description": "Modern decorative cone tree ideal for hotel lobbies, mall displays, entrances and event styling. Designed with festive lighting and coordinated holiday d�cor for a sleek and space-efficient Christmas installation.",
+    "size": "6ft - 8ft",
+    "img": "xds-ct.png"
+  },
+  {
+    "sku": "xds-cta",
+    "name": "Christmas Tree",
+    "cat": "xds",
+    "description": "Custom-decorated Christmas trees available in various heights for hotels, malls, condominiums, offices and commercial spaces. Professionally styled with coordinated ornaments, lighting, ribbons, florals and themed holiday d�cor to create a striking festive centerpiece.",
+    "size": "7ft - 30ft",
+    "img": "xds-cta.png"
+  },
+  {
+    "sku": "xds-cl",
+    "name": "6m Curtain Lights",
+    "cat": "xds",
+    "description": "Decorative curtain lighting ideal for walls, windows, stage backdrops and event spaces. Provides a warm and elegant festive glow perfect for hotels, restaurants, malls and holiday installations.",
+    "img": "xds-cl.png"
+  },
+  {
+    "sku": "xds-dl",
+    "name": "Dandelion Lights",
+    "cat": "xds",
+    "description": "Decorative LED dandelion lights designed to add sparkle and ambiance to Christmas displays, pathways, gardens and event setups. Creates a magical festive atmosphere for both indoor and outdoor holiday styling.",
+    "img": "xds-dl.png"
+  },
+  {
+    "sku": "xds-ltp",
+    "name": "Lighted Topiary",
+    "cat": "xds",
+    "description": "Illuminated decorative topiary ideal for entrances, pathways, lobbies and commercial Christmas displays. Combines elegant greenery styling with warm festive lighting for a sophisticated holiday accent.",
+    "img": "xds-ltp.png"
+  }
+]

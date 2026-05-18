@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- SheetJS for reading Excel files. Loaded from CDN, cached after first visit. -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --green:#2d4a3e; --green-deep:#1f342a; --green-soft:#3d5d50;
+    --cream:#faf7f2; --cream-warm:#f3ede2;
+    --gold:#b8956a; --gold-soft:#d4b88a; --rose:#b14b3e;
+    --ink:#1a1f1c; --ink-soft:#4a514c; --muted:#8b908c;
+    --line:#e8e3d8; --white:#ffffff;
+    --shadow-sm: 0 1px 2px rgba(20,30,25,.04), 0 2px 6px rgba(20,30,25,.04);
+    --shadow-md: 0 4px 12px rgba(20,30,25,.06), 0 8px 24px rgba(20,30,25,.05);
+    --shadow-lg: 0 12px 32px rgba(20,30,25,.10), 0 24px 64px rgba(20,30,25,.08);
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--sans);color:var(--ink);background:#e8e3d8;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .frame{max-width:430px;margin:0 auto;background:var(--cream);min-height:100vh;position:relative;box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
+  @media (max-width:480px){ .frame{max-width:100%;box-shadow:none} body{background:var(--cream)} }
+
+  .header{
+    background:linear-gradient(180deg,var(--green) 0%, var(--green-deep) 100%);
+    color:var(--cream);padding:14px 18px;display:flex;align-items:center;
+    justify-content:space-between;position:sticky;top:0;z-index:50;
+    border-bottom:1px solid rgba(184,149,106,.15);
+  }
+  .header-title{display:flex;align-items:center;gap:10px;cursor:pointer;padding:4px 6px;margin-left:-6px;border-radius:6px;transition:background .2s ease}
+  .header-title:hover{background:rgba(255,255,255,.06)}
+  .header-mark{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(184,149,106,.18)}
+  .header-label{font-family:var(--serif);font-weight:400;font-size:15px;letter-spacing:1px;color:var(--cream)}
+  .header-actions{display:flex;align-items:center;gap:8px}
+  .icon-btn{
+    width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;
+    color:var(--cream);cursor:pointer;transition:all .25s ease;position:relative;
+  }
+  .icon-btn:hover{background:rgba(255,255,255,.16)}
+  .icon-btn svg{width:15px;height:15px}
+
+  /* Trade-view pill — only shows when ?prices=on */
+  .trade-pill{
+    display:none;align-items:center;gap:6px;
+    background:rgba(184,149,106,.30);border:1px solid var(--gold-soft);
+    color:var(--cream);font-size:10px;font-weight:600;letter-spacing:1.2px;
+    text-transform:uppercase;padding:5px 10px;border-radius:14px;
+  }
+  body.prices-on .trade-pill{display:inline-flex}
+  .trade-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
+
+  .hero{position:relative;height:200px;margin:0;overflow:hidden;background:linear-gradient(135deg,#a89274 0%, #6b5a45 50%, #3d3429 100%)}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%, rgba(255,235,200,.25), transparent 50%),radial-gradient(ellipse at 80% 70%, rgba(50,30,20,.4), transparent 60%)}
+  .hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 28px;color:var(--cream)}
+  .hero-eyebrow{font-size:10px;letter-spacing:3.6px;text-transform:uppercase;color:var(--gold-soft);margin-bottom:10px;font-weight:500}
+  .hero-title{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1;letter-spacing:-.5px;max-width:240px}
+  .hero-title em{font-style:italic;color:var(--gold-soft);font-weight:500}
+  .hero-pages{position:absolute;right:14px;bottom:12px;background:rgba(0,0,0,.35);color:#fff;font-size:11px;padding:3px 10px;border-radius:11px;backdrop-filter:blur(6px);font-variant-numeric:tabular-nums}
+
+  .section{padding:22px 18px 6px}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+  .section-title{font-family:var(--serif);font-weight:500;font-size:18px;letter-spacing:-.2px;color:var(--ink)}
+  .section-meta{font-size:11px;color:var(--muted);letter-spacing:.5px}
+
+  .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 12px;padding:4px 4px 8px}
+  .cat{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
+  .cat-thumb{width:64px;height:64px;border-radius:50%;background:var(--cream-warm);overflow:hidden;position:relative;box-shadow:var(--shadow-sm);border:1px solid var(--line);transition:transform .35s ease, box-shadow .35s ease}
+  .cat:hover .cat-thumb{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .cat-thumb svg, .cat-thumb img{width:100%;height:100%;display:block;object-fit:cover}
+  .cat-label{font-size:11.5px;color:var(--ink-soft);font-weight:500;text-align:center;line-height:1.2}
+
+  .prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .prod{background:var(--white);border-radius:10px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .35s ease, box-shadow .35s ease;display:flex;flex-direction:column}
+  .prod:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+  .prod-img{aspect-ratio:1/1;background:var(--cream-warm);position:relative;overflow:hidden}
+  .prod-img svg, .prod-img img{width:100%;height:100%;display:block;object-fit:cover}
+  .prod-sku{position:absolute;top:8px;left:8px;font-size:9px;letter-spacing:.8px;font-weight:600;color:#fff;background:rgba(20,30,25,.55);padding:2px 7px;border-radius:3px;backdrop-filter:blur(4px);z-index:2}
+  .prod-info{padding:10px 12px 12px}
+  .prod-name{font-family:var(--serif);font-weight:500;font-size:14px;color:var(--ink);line-height:1.25;margin-bottom:3px}
+  .prod-meta{font-size:11px;color:var(--muted);letter-spacing:.2px}
+  .prod-price{margin-top:6px;font-size:13px;font-weight:600;color:var(--green);font-variant-numeric:tabular-nums;letter-spacing:-.2px;display:none}
+  body.prices-on .prod-price{display:block}
+
+  .divider{margin:26px 18px 0;border-top:1px solid var(--line)}
+
+  /* Category filter chips */
+  .filter-row{
+    display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;
+    padding:0 18px 4px;margin:0 -18px 14px;
+  }
+  .filter-row::-webkit-scrollbar{display:none}
+  .chip{
+    flex-shrink:0;padding:7px 14px;border-radius:18px;
+    background:var(--white);border:1px solid var(--line);color:var(--ink-soft);
+    font-size:12px;font-weight:500;cursor:pointer;
+    transition:all .2s ease;letter-spacing:.2px;
+    white-space:nowrap;
+  }
+  .chip:hover{border-color:var(--green-soft)}
+  .chip.active{background:var(--green);color:var(--cream);border-color:var(--green)}
+
+  /* BOTTOM NAV — 2 tabs (Home, Categories) */
+  .nav{
+    position:sticky;bottom:0;background:rgba(255,255,255,.92);
+    backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px);
+    border-top:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(2,1fr);
+    padding:8px 0 calc(8px + env(safe-area-inset-bottom));z-index:40;
+  }
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;cursor:pointer;color:var(--muted);transition:color .2s ease}
+  .nav-item.active{color:var(--green)}
+  .nav-item svg{width:20px;height:20px}
+  .nav-label{font-size:10.5px;letter-spacing:.3px;font-weight:500}
+
+  .detail{position:fixed;inset:0;background:var(--cream);z-index:300;display:none;flex-direction:column;overflow-y:auto;animation:slideUp .3s cubic-bezier(.2,.7,.2,1)}
+  .detail.show{display:flex}
+  @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  .detail-frame{max-width:430px;width:100%;margin:0 auto;background:var(--cream);min-height:100%}
+  .detail-header{background:linear-gradient(180deg,var(--green) 0%, var(--green-deep) 100%);color:var(--cream);padding:14px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+  .detail-back{background:rgba(255,255,255,.1);border:none;color:var(--cream);width:32px;height:32px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
+  .detail-back svg{width:14px;height:14px}
+  .detail-title{font-family:var(--serif);font-weight:500;font-size:16px}
+  .detail-hero{aspect-ratio:1/1;background:var(--cream-warm);margin:14px 18px;border-radius:10px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .detail-hero svg, .detail-hero img{width:100%;height:100%;display:block;object-fit:cover}
+  .detail-thumbs{display:flex;gap:8px;padding:0 18px;overflow-x:auto;margin-bottom:18px}
+  .detail-thumb{width:54px;height:54px;border-radius:6px;flex-shrink:0;background:var(--cream-warm);border:2px solid transparent;cursor:pointer;overflow:hidden}
+  .detail-thumb.active{border-color:var(--green)}
+  .detail-thumb svg, .detail-thumb img{width:100%;height:100%;display:block;object-fit:cover}
+  .detail-info{padding:0 18px 24px}
+  .detail-sku{font-size:11px;color:var(--gold);letter-spacing:1.5px;font-weight:600;margin-bottom:4px;text-transform:uppercase}
+  .detail-name{font-family:var(--serif);font-weight:500;font-size:24px;color:var(--ink);margin-bottom:14px;line-height:1.15}
+  .detail-price{font-size:22px;font-weight:600;color:var(--green);font-variant-numeric:tabular-nums;letter-spacing:-.5px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px;display:none}
+  body.prices-on .detail-price{display:block}
+  .detail-specs{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;margin-bottom:20px}
+  .spec{font-size:12px}
+  .spec-label{color:var(--muted);letter-spacing:.6px;text-transform:uppercase;font-size:10px;margin-bottom:3px;font-weight:500}
+  .spec-value{color:var(--ink);font-weight:500;font-size:13px}
+  .detail-desc{font-size:13px;color:var(--ink-soft);line-height:1.6;padding-top:18px;border-top:1px solid var(--line)}
+  .detail-desc h4{font-family:var(--serif);font-weight:500;font-size:15px;color:var(--ink);margin-bottom:8px}
+
+  .view{display:none}
+  .view.active{display:flex;flex-direction:column;flex:1}
+</style>
+</head>
+<body>
+
+<div class="frame" id="frame">
+
+  <header class="header">
+    <div class="header-title" id="homeBtn">
+      <div class="header-mark"></div>
+      <div class="header-label">Showcase</div>
+    </div>
+    <div class="header-actions">
+      <span class="trade-pill" title="Pricing is visible (Trade view)">Trade</span>
+      <button class="icon-btn" title="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <div class="view active" id="view-home">
+    <section class="section" style="padding-top:20px">
+      <div class="section-head">
+        <h2 class="section-title">Categories</h2>
+        <div class="section-meta" id="catCount">12 categories</div>
+      </div>
+      <div class="cat-grid" id="catGrid"></div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section" style="padding-bottom:24px">
+      <div class="section-head">
+        <h2 class="section-title">Featured Pieces</h2>
+        <div class="section-meta" id="featuredMeta"></div>
+      </div>
+      <div class="prod-grid" id="featuredGrid"></div>
+    </section>
+  </div>
+
+  <!-- CATEGORY -->
+  <div class="view" id="view-category">
+    <section class="section" style="padding-top:18px;padding-bottom:24px">
+      <div class="section-head">
+        <h2 class="section-title" id="catTitle">All Products</h2>
+        <div class="section-meta" id="catItemCount">0 items</div>
+      </div>
+      <div class="filter-row" id="catTabs"></div>
+      <div class="prod-grid" id="catGridProds"></div>
+    </section>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-item active" data-view="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item" data-view="category">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="nav-label">Categories</span>
+    </div>
+  </nav>
+
+</div>
+
+<!-- DETAIL VIEW -->
+<div class="detail" id="detail">
+  <div class="detail-frame">
+    <div class="detail-header">
+      <button class="detail-back" id="detailBack">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
+      </button>
+      <div class="detail-title" id="detailTitle">Product</div>
+    </div>
+    <div class="detail-hero" id="detailHero"></div>
+    <div class="detail-thumbs" id="detailThumbs"></div>
+    <div class="detail-info">
+      <div class="detail-sku" id="detailSku">SKU</div>
+      <div class="detail-name" id="detailName">Product Name</div>
+      <div class="detail-price" id="detailPrice">PHP 0,000</div>
+      <div class="detail-specs" id="detailSpecs"></div>
+      <div class="detail-desc" id="detailDescBlock">
+        <p id="detailDesc"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============================================================
+  // PRICING TOGGLE — controls whether prices appear on the page
+  //
+  // No passwords. Two ways to reveal prices:
+  //   1. Add ?prices=on to the URL (e.g. https://yoursite.com/?prices=on)
+  //   2. The toggle persists for the rest of the visit via sessionStorage,
+  //      so deep links and refreshes keep prices visible during the session.
+  //
+  // To use a less guessable parameter, change PRICING_PARAM and PRICING_VALUE
+  // below. For example: PRICING_PARAM='view', PRICING_VALUE='trade'
+  // would mean ?view=trade reveals prices.
+  //
+  // To force prices off, share ?prices=off (clears the sessionStorage flag).
+  // ============================================================
+  const PRICING_PARAM = 'view';
+  const PRICING_VALUE = 'trade';
+
+  function applyPricingToggle(){
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get(PRICING_PARAM);
+    let on;
+    if (fromUrl === PRICING_VALUE) {
+      sessionStorage.setItem('pricesOn', '1');
+      on = true;
+    } else if (fromUrl !== null) {
+      // Any other explicit value clears the flag (e.g. ?prices=off)
+      sessionStorage.removeItem('pricesOn');
+      on = false;
+    } else {
+      on = sessionStorage.getItem('pricesOn') === '1';
+    }
+    document.body.classList.toggle('prices-on', on);
+  }
+  applyPricingToggle();
+
+  // ============================================================
+  // CATEGORIES, PRODUCTS — loaded from /data/*.json or /data/showcase-data.xlsx
+  // Edit those files directly, or use admin-dashboard.html.
+  // The arrays below stay empty here; they're filled when the page loads.
+  // ============================================================
+  let categories = [];
+  let products = [];
+
+  // ============================================================
+  // (Below this line is the engine — you usually don't need to edit.)
+  // ============================================================
+
+  // ---------- Neutral placeholder (used when no real image is provided) ----------
+  function placeholderSvg(sku){
+    const id = (sku || 'x').replace(/[^a-z0-9]/gi, '-');
+    return `<svg viewBox="0 0 110 110" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ph-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f3ede2"/><stop offset="100%" stop-color="#e0d8c8"/></linearGradient></defs><rect width="110" height="110" fill="url(#ph-${id})"/><text x="55" y="58" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="8.5" fill="#8b908c" letter-spacing="1.5">${escapeText(sku || '')}</text></svg>`;
+  }
+
+  // Parse the Image field: accepts a string ("a.jpg" or "a.jpg, b.jpg") or array.
+  // Uses pipe as fallback separator if commas would conflict with URL commas (e.g. Cloudinary).
+  function parseImageList(value){
+    if (Array.isArray(value)) return value.map(s => String(s).trim()).filter(Boolean);
+    if (!value) return [];
+    const s = String(value).trim();
+    if (!s) return [];
+    const sep = s.includes('|') ? '|' : ',';
+    return s.split(sep).map(x => x.trim()).filter(Boolean);
+  }
+
+  // image with SVG fallback if file missing
+  // Accepts either a local filename (looks in images/products/) OR a full URL.
+  // Multiple images supported via comma or pipe in the Image column.
+  function productImage(p, idx){
+    const list = parseImageList(p.img);
+    if (list.length === 0) return placeholderSvg(p.sku);
+    const img = list[idx || 0] || list[0];
+    const sk = (p.sku || '').replace(/'/g,"\\'");
+    const src = /^https?:\/\//i.test(img) ? img : `images/products/${img}`;
+    return `<img src="${src}" alt="${escapeText(p.name || '')}" loading="lazy" onerror="this.outerHTML=window.__phFor('${sk}')">`;
+  }
+  window.__phFor = (sk) => placeholderSvg(sk);
+
+  function categoryImage(c){
+    if(c.img){
+      const src = /^https?:\/\//i.test(c.img) ? c.img : `images/categories/${c.img}`;
+      return `<img src="${src}" alt="${escapeText(c.label || '')}" loading="lazy" onerror="this.outerHTML=window.__phFor('')">`;
+    }
+    return placeholderSvg('');
+  }
+
+  // ---------- RENDER ----------
+  const catGrid = document.getElementById('catGrid');
+  function renderCategoriesGrid(){
+    catGrid.innerHTML = categories.slice(0,12).map(c => `
+      <div class="cat" data-cat="${c.key}">
+        <div class="cat-thumb">${categoryImage(c)}</div>
+        <div class="cat-label">${c.label}</div>
+      </div>
+    `).join('');
+    document.getElementById('catCount').textContent = `${categories.length} categories`;
+  }
+
+  function prodCard(p){
+    return `<div class="prod" data-sku="${p.sku}"><div class="prod-img"><span class="prod-sku">${p.sku}</span>${productImage(p)}</div><div class="prod-info"><div class="prod-name">${p.name}</div><div class="prod-meta">${p.size}</div><div class="prod-price">${p.price}</div></div></div>`;
+  }
+
+  function renderFeatured(){
+    // Show products marked Featured (any truthy value: Y, Yes, TRUE, 1).
+    // If none are marked, fall back to the first 4 products so the section isn't empty.
+    const featured = products.filter(p => p.featured);
+    const list = featured.length ? featured : products.slice(0, 4);
+    const meta = document.getElementById('featuredMeta');
+    if(meta){
+      meta.textContent = featured.length
+        ? `${featured.length} item${featured.length===1?'':'s'}`
+        : (products.length ? 'Latest additions' : '');
+    }
+    document.getElementById('featuredGrid').innerHTML = list.length
+      ? list.map(prodCard).join('')
+      : `<div style="grid-column:1/-1;text-align:center;padding:30px 0;color:var(--muted);font-size:13px">Mark products with "Yes" in the Featured column to highlight them here.</div>`;
+  }
+
+  catGrid.addEventListener('click', e=>{
+    const cat = e.target.closest('.cat'); if(!cat) return;
+    showCategory(cat.dataset.cat);
+  });
+  function renderCategoryTabs(activeKey){
+    // Tabs follow the order categories appear in the Categories sheet.
+    const tabs = [
+      `<button class="chip ${activeKey === 'all' ? 'active' : ''}" data-cat-tab="all">All Products</button>`,
+      ...categories.map(c =>
+        `<button class="chip ${activeKey === c.key ? 'active' : ''}" data-cat-tab="${escapeText(c.key)}">${escapeText(c.label)}</button>`
+      )
+    ];
+    const el = document.getElementById('catTabs');
+    el.innerHTML = tabs.join('');
+    // Scroll the active tab into view so the user can see which one is selected
+    const activeEl = el.querySelector('.chip.active');
+    if (activeEl) activeEl.scrollIntoView({behavior:'instant', block:'nearest', inline:'center'});
+  }
+
+  function showCategory(key){
+    const cat = categories.find(c=>c.key===key);
+    const items = products.filter(p=>p.cat===key);
+    document.getElementById('catTitle').textContent = cat ? cat.label : 'All Products';
+    document.getElementById('catItemCount').textContent = `${items.length} item${items.length===1?'':'s'}`;
+    document.getElementById('catGridProds').innerHTML = items.length
+      ? items.map(prodCard).join('')
+      : `<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--muted);font-size:13px">More pieces in this category coming soon — request samples via your account manager.</div>`;
+    renderCategoryTabs(key);
+    setView('category');
+  }
+
+  function showAllProducts(){
+    document.getElementById('catTitle').textContent = 'All Products';
+    document.getElementById('catItemCount').textContent = `${products.length} item${products.length===1?'':'s'}`;
+    document.getElementById('catGridProds').innerHTML = products.length
+      ? products.map(prodCard).join('')
+      : `<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--muted);font-size:13px">No products yet. Add rows to the Products sheet in your data file.</div>`;
+    renderCategoryTabs('all');
+  }
+
+  // Tab clicks — event delegation, so it works for tabs rendered after page load
+  document.getElementById('catTabs').addEventListener('click', e => {
+    const tab = e.target.closest('[data-cat-tab]'); if(!tab) return;
+    const key = tab.dataset.catTab;
+    if (key === 'all') showAllProducts();
+    else showCategory(key);
+  });
+
+  function setView(name){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active', i.dataset.view===name));
+    document.getElementById('frame').scrollTop = 0;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.nav-item').forEach(i=>{
+    i.addEventListener('click', ()=> {
+      const v = i.dataset.view;
+      // Tapping Categories nav loads all products as a "browse everything" view.
+      // The category-specific view is reached by tapping a category from the home page.
+      if(v === 'category') showAllProducts();
+      setView(v);
+    });
+  });
+  // "Showcase" header → home
+  document.getElementById('homeBtn').addEventListener('click', ()=> setView('home'));
+
+  // ---------- PRODUCT DETAIL ----------
+  // Event delegation so it works for products rendered after page load
+  document.body.addEventListener('click', e=>{
+    const el = e.target.closest('[data-sku]'); if(!el) return;
+    const p = products.find(x=>x.sku===el.dataset.sku); if(!p) return;
+    openDetail(p);
+  });
+  // Currently-open product, used by the thumb-strip click handler to swap the hero
+  let currentDetailProduct = null;
+
+  function openDetail(p){
+    currentDetailProduct = p;
+    document.getElementById('detailTitle').textContent = p.name;
+    document.getElementById('detailHero').innerHTML = productImage(p, 0);
+    document.getElementById('detailSku').textContent = p.sku;
+    document.getElementById('detailName').textContent = p.name;
+    document.getElementById('detailPrice').textContent = p.price || '';
+
+    // Build spec grid with only the fields that have values
+    const specs = [];
+    if(p.size)     specs.push({label:'Size',     value:p.size});
+    if(p.material) specs.push({label:'Material', value:p.material});
+    const specsEl = document.getElementById('detailSpecs');
+    if(specs.length){
+      specsEl.style.display = '';
+      specsEl.innerHTML = specs.map(s =>
+        `<div class="spec"><div class="spec-label">${escapeText(s.label)}</div><div class="spec-value">${escapeText(s.value)}</div></div>`
+      ).join('');
+    } else {
+      specsEl.style.display = 'none';
+      specsEl.innerHTML = '';
+    }
+
+    // Description: show per-product text, hide entirely if empty
+    const descBlock = document.getElementById('detailDescBlock');
+    const descText = (p.description || '').trim();
+    if(descText){
+      descBlock.style.display = '';
+      document.getElementById('detailDesc').textContent = descText;
+    } else {
+      descBlock.style.display = 'none';
+    }
+
+    // Thumbs strip — one thumb per image. Hide entirely if only one image.
+    const imgList = parseImageList(p.img);
+    const thumbsEl = document.getElementById('detailThumbs');
+    if (imgList.length > 1) {
+      thumbsEl.style.display = '';
+      thumbsEl.innerHTML = imgList.map((_, i) =>
+        `<div class="detail-thumb ${i === 0 ? 'active' : ''}" data-thumb-idx="${i}">${productImage(p, i)}</div>`
+      ).join('');
+    } else {
+      thumbsEl.style.display = 'none';
+      thumbsEl.innerHTML = '';
+    }
+
+    document.getElementById('detail').classList.add('show');
+    document.body.style.overflow='hidden';
+  }
+
+  // Tapping a thumbnail swaps the hero image
+  document.getElementById('detailThumbs').addEventListener('click', e => {
+    const thumb = e.target.closest('.detail-thumb');
+    if (!thumb || !currentDetailProduct) return;
+    const idx = parseInt(thumb.dataset.thumbIdx || '0', 10);
+    document.getElementById('detailHero').innerHTML = productImage(currentDetailProduct, idx);
+    thumb.parentElement.querySelectorAll('.detail-thumb').forEach(t =>
+      t.classList.toggle('active', t === thumb)
+    );
+  });
+  document.getElementById('detailBack').addEventListener('click', ()=>{
+    document.getElementById('detail').classList.remove('show');
+    document.body.style.overflow='';
+  });
+
+  // ---------- STARTUP: load data, then render ----------
+  // Tries loading order: showcase-data.xlsx → individual JSON files
+  // Whichever exists first wins. You only need ONE of these formats.
+  async function startup(){
+    let loaded = null;
+    try {
+      loaded = await loadFromXlsx('data/showcase-data.xlsx');
+    } catch (e1) {
+      try {
+        loaded = await loadFromJson();
+      } catch (e2) {
+        showDataLoadError(e2);
+        return;
+      }
+    }
+    categories = Array.isArray(loaded.categories) ? loaded.categories : [];
+    products   = Array.isArray(loaded.products)   ? loaded.products   : [];
+    renderCategoriesGrid();
+    renderFeatured();
+  }
+
+  async function loadFromXlsx(url){
+    const r = await fetch(url, {cache:'no-store'});
+    if (!r.ok) throw new Error('xlsx not found');
+    const buf = await r.arrayBuffer();
+    if (typeof XLSX === 'undefined') throw new Error('SheetJS library failed to load');
+    const wb = XLSX.read(buf, {type: 'array'});
+    const sheet = (name) => wb.Sheets[name] ? XLSX.utils.sheet_to_json(wb.Sheets[name], {defval: ''}) : [];
+    const truthy = (v) => {
+      if (v === true || v === 1) return true;
+      const s = String(v).trim().toLowerCase();
+      return s === 'y' || s === 'yes' || s === 'true' || s === '1' || s === 'x' || s === '✓';
+    };
+    return {
+      products:   sheet('Products').map(p => ({
+        sku:         String(p.SKU || p.sku || ''),
+        name:        String(p.Name || p.name || ''),
+        cat:         String(p.Category || p.cat || ''),
+        description: String(p.Description || p.description || ''),
+        size:        String(p.Size || p.size || ''),
+        material:    String(p.Material || p.material || ''),
+        price:       String(p.Price || p.price || ''),
+        img:         String(p.Image || p.img || ''),
+        featured:    truthy(p.Featured || p.featured || ''),
+      })).filter(p => p.sku),
+      categories: sheet('Categories').map(c => ({
+        key:   String(c.Key || c.key || ''),
+        label: String(c.Label || c.label || ''),
+        img:   String(c.Image || c.img || ''),
+      })).filter(c => c.key),
+    };
+  }
+
+  async function loadFromJson(){
+    const [c, p] = await Promise.all([
+      fetch('data/categories.json', {cache:'no-store'}).then(r => r.ok ? r.json() : Promise.reject(new Error('No data files found. Need either data/showcase-data.xlsx or data/categories.json + products.json'))),
+      fetch('data/products.json',   {cache:'no-store'}).then(r => r.ok ? r.json() : [])
+    ]);
+    return { categories: c, products: p };
+  }
+
+  function showDataLoadError(err){
+    const isFile = location.protocol === 'file:';
+    document.body.innerHTML = `
+      <div style="max-width:520px;margin:60px auto;padding:32px 24px;background:#fff;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.06);font-family:system-ui,-apple-system,sans-serif;line-height:1.5;color:#1a1f1c">
+        <h1 style="font-family:Georgia,serif;font-weight:500;font-size:24px;margin:0 0 12px;color:#1f342a">Couldn't load showcase data</h1>
+        <p style="font-size:14px;color:#4a514c;margin-bottom:14px">${escapeText(err.message)}</p>
+        ${isFile ? `
+          <p style="font-size:14px;color:#4a514c;margin-bottom:14px">
+            This page needs to run from a web server, not directly from a file. The data files in the <code style="background:#f3ede2;padding:2px 6px;border-radius:3px;font-family:ui-monospace,monospace">data/</code> folder can't be loaded via <code style="background:#f3ede2;padding:2px 6px;border-radius:3px;font-family:ui-monospace,monospace">file://</code> for browser security reasons.
+          </p>
+          <p style="font-size:14px;color:#4a514c;margin-bottom:14px">
+            <b>Quick fix:</b> Double-click <code style="background:#f3ede2;padding:2px 6px;border-radius:3px;font-family:ui-monospace,monospace">start-server.bat</code> (Windows) or <code style="background:#f3ede2;padding:2px 6px;border-radius:3px;font-family:ui-monospace,monospace">start-server.command</code> (Mac), then visit the URL it shows you.
+          </p>` : `
+          <p style="font-size:14px;color:#4a514c;margin-bottom:14px">
+            Make sure the <code style="background:#f3ede2;padding:2px 6px;border-radius:3px;font-family:ui-monospace,monospace">data/</code> folder exists and contains either <code style="background:#f3ede2;padding:2px 6px;border-radius:3px;font-family:ui-monospace,monospace">showcase-data.xlsx</code>, or the JSON files (<code style="background:#f3ede2;padding:2px 6px;border-radius:3px;font-family:ui-monospace,monospace">products.json</code>, <code style="background:#f3ede2;padding:2px 6px;border-radius:3px;font-family:ui-monospace,monospace">categories.json</code>).
+          </p>`}
+      </div>`;
+  }
+  function escapeText(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+  startup();
+</script>
+
+</body>
+</html>
